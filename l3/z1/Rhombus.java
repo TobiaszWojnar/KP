@@ -13,3 +13,12 @@
  *	for pentagon and hexagon	- side
  * eg.: java figures q 8 8 4 4 90
  **/
+
+public class Rhombus extends Quadrangle{
+    public Rhombus (double side, double angle){
+        super (side, side, side, side, angle);
+    }
+    public double Surface () {
+        return sides[0]*sides[0]*Math.sin(Math.toRadians(angle));
+    }
+}

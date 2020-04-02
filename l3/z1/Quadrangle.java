@@ -13,3 +13,18 @@
  *	for pentagon and hexagon	- side
  * eg.: java figures q 8 8 4 4 90
  **/
+
+public abstract class Quadrangle extends Figure {
+    double[] sides = new double[4];
+    double angle;
+    public Quadrangle (double side1, double side2, double side3, double side4, double angle){
+        sides[0]=side1;
+        sides[1]=side2;
+        sides[2]=side3;
+        sides[3]=side4;
+        this.angle=angle;
+    }
+    public double Circumference () {
+        return sides[0]+sides[1]+sides[2]+sides[3];
+    }
+}

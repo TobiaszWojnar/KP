@@ -13,3 +13,16 @@
  *	for pentagon and hexagon	- side
  * eg.: java figures q 8 8 4 4 90
  **/
+public class Pentagon extends Figure {
+    double side;
+    public Pentagon (double side){
+        this.side=side;
+    }
+    public double Surface (){
+        double value = (1.25*side*side)/Math.tan(Math.toRadians(36));
+        return value;
+    }
+    public double Circumference (){
+        return 5*side;
+    }
+}

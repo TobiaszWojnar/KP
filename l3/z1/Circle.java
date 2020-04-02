@@ -13,3 +13,17 @@
  *	for pentagon and hexagon	- side
  * eg.: java figures q 8 8 4 4 90
  **/
+
+public class Circle extends Figure {
+    double radious;
+    public Circle (double radious){
+        this.radious=radious;
+    }
+    public double Surface (){
+        double value = Math.PI*radious*radious;
+        return value;
+    }
+    public double Circumference (){
+        return Math.PI*radious*2;
+    }
+}

@@ -13,3 +13,11 @@
  *	for pentagon and hexagon	- side
  * eg.: java figures q 8 8 4 4 90
  **/
+public class Square extends Quadrangle {
+    public Square (double side){
+        super (side,side,side,side,90);
+    }
+    public double Surface (){
+        return sides[0]*sides[0];
+    }
+}

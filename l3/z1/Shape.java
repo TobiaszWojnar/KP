@@ -13,3 +13,7 @@
  *	for pentagon and hexagon	- side
  * eg.: java figures q 8 8 4 4 90
  **/
+public interface Shape {
+    public double Surface ();
+    public double Circumference ();
+}
