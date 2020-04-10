@@ -1,10 +1,13 @@
 package l3;
+
+import java.util.Arrays;
+
 /**
  * @author Tobiasz Wojnar
  * Java Programing Course 2020 list 3 exercise 1
  *
  * Calculate surface area and circumference of:
- * circle, quadrangle (square, rectangle, rhombus), regular pentagon, regular hexagon
+     * circle, quadrangle (square, rectangle, rhombus), regular pentagon, regular hexagon
  * implement hierarchy and abstract class Figure
  * handle exeptions and bad data
  *
@@ -28,15 +31,18 @@ public class Figury {
      *             > eg.: java Figures q 8 8 4 4 90
      */
     public static void main(String[] args) {
-        String typeFigure=isFigure(args);
-        double[] parameter;
-        if (!typeFigure.equals("0")) {
-            parameter = hasValidArgs(args);
-            if (parameter!=null) {
-                System.out.println(calculate(typeFigure,parameter));
+        try {
+            String typeFigure = isFigure(args);
+            double[] parameter;
+            if (!typeFigure.equals("0")) {
+                parameter = hasValidArgs(args);
+                if (parameter != null) {
+                    System.out.println(calculate(typeFigure, parameter));
+                }
             }
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e){
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
-
     }
 
     /**
@@ -53,7 +59,7 @@ public class Figury {
                 case "q":
                     return args[0];
                 default:
-                    return "0";
+                    throw new IllegalArgumentException("Shape '"+ args[0] + "' does not exist");
             }
         } else {
             return "0";
@@ -72,9 +78,10 @@ public class Figury {
         for (int i = 0; i < len; i++) {
             try {
                 param[i] = Double.parseDouble(args[i + 1]);
-                if(param[i]<0)
-                    return null;
-            } catch (NumberFormatException ex) {
+                if (param[i] < 0){
+                    throw new IllegalArgumentException(param[i] + " is not positive number");
+                }
+            } catch (NumberFormatException ex) {//TODO
                 return null;
             }
         }
@@ -83,30 +90,27 @@ public class Figury {
             case "p":
             case "h":
                 if (args.length != 2) { //checks for right number of parameters
-                    return null;
+                    throw new IndexOutOfBoundsException(Arrays.toString(args) + " wrong number of parameters");
                 } else {
-                    if (param[0]<0){
-                        return null;
-                    } else
-                        return param;
+                    return param;
                 }
             case "q":
                 if (args.length != 6) { //checks for right number of parameters
-                    return null;
+                    throw new IndexOutOfBoundsException(Arrays.toString(args) + " wrong number of parameters");
                 } else {
                     if (param[0] != param[1] || param[2] != param[3]) { //checks if its parallelogram
-                        return null;
+                        throw new IllegalArgumentException(Arrays.toString(param) + " can't create this parallelogram");
                     }
                     if (param[4] > 180) {   //assures that angle is obtuse, right or acute
-                        return null;
+                        throw new IllegalArgumentException(param[4] + " angle to big");
                     }
                     if (param[0] != param[2] && param[4] != 90) {   //if sides are not the same length it needs to be rectangle
-                        return null;
+                        throw new IllegalArgumentException(Arrays.toString(param) + " can't create this parallelogram");
                     }
                     return param;
                 }
             default:
-                return null;
+                throw new IllegalArgumentException("Shape '"+ args[0] + "' does not exist");
         }
     }
 
@@ -138,7 +142,7 @@ public class Figury {
                 }
                 break;
             default:
-                return "can be here";
+                throw new IllegalArgumentException("Shape '"+ fType + "' does not exist");
         }
         return "surface = " + f.surface() + "\ncircumference = " + f.circumference();
     }
