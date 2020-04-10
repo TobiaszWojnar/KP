@@ -62,7 +62,7 @@ public class Figury {
                     throw new IllegalArgumentException("Shape '"+ args[0] + "' does not exist");
             }
         } else {
-            return "0";
+            throw new IndexOutOfBoundsException("No parameters");
         }
     }
 
@@ -89,15 +89,11 @@ public class Figury {
             case "c":
             case "p":
             case "h":
-                if (args.length != 2) { //checks for right number of parameters
-                    throw new IndexOutOfBoundsException(Arrays.toString(args) + " wrong number of parameters");
-                } else {
+                if (rightNrOfAra(args[0],param)) { //checks for right number of parameters
                     return param;
                 }
             case "q":
-                if (args.length != 6) { //checks for right number of parameters
-                    throw new IndexOutOfBoundsException(Arrays.toString(args) + " wrong number of parameters");
-                } else {
+                if (rightNrOfAra(args[0],param)) { //checks for right number of parameters
                     if (param[0] != param[1] || param[2] != param[3]) { //checks if its parallelogram
                         throw new IllegalArgumentException(Arrays.toString(param) + " can't create this parallelogram");
                     }
@@ -113,7 +109,26 @@ public class Figury {
                 throw new IllegalArgumentException("Shape '"+ args[0] + "' does not exist");
         }
     }
-
+    public static boolean rightNrOfAra (String fType, double[] args) {
+        switch (fType) {
+            case "c":
+            case "p":
+            case "h":
+                if(args.length == 1){
+                    return true;
+                } else {
+                    throw new IndexOutOfBoundsException(Arrays.toString(args) + " wrong number of parameters");
+                }
+            case "q":
+                if(args.length == 4){
+                    return true;
+                } else {
+                    throw new IndexOutOfBoundsException(Arrays.toString(args) + " wrong number of parameters");
+                }
+            default:
+                throw new IllegalArgumentException("Shape '"+ fType + "' does not exist");
+        }
+    }
     /**
      * calculates surface area and circumference of figure
      * @param fType type of figure {"c","q","p","h"}
@@ -122,28 +137,32 @@ public class Figury {
      */
     public static String calculate(String fType, double[] arg) {
         Figure f;
-        switch (fType) {
-            case "c":
-                f = new Circle(arg[0]);
-                break;
-            case "p":
-                f = new Pentagon(arg[0]);
-                break;
-            case "h":
-                f = new Hexagon(arg[0]);
-                break;
-            case "q":
-                if (arg[4] != 90) {
-                    f = new Rhombus(arg[0], arg[4]);
-                } else if (arg[0] != arg[2]) {
-                    f = new Rectangle(arg[0], arg[2]);
-                } else {
-                    f = new Square(arg[0]);
-                }
-                break;
-            default:
-                throw new IllegalArgumentException("Shape '"+ fType + "' does not exist");
+        if (rightNrOfAra(fType, arg)) {
+            switch (fType) {
+                case "c":
+                    f = new Circle(arg[0]);
+                    break;
+                case "p":
+                    f = new Pentagon(arg[0]);
+                    break;
+                case "h":
+                    f = new Hexagon(arg[0]);
+                    break;
+                case "q":
+                    if (arg[4] != 90) {
+                        f = new Rhombus(arg[0], arg[4]);
+                    } else if (arg[0] != arg[2]) {
+                        f = new Rectangle(arg[0], arg[2]);
+                    } else {
+                        f = new Square(arg[0]);
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Shape '" + fType + "' does not exist");
+            }
+            return "surface = " + f.surface() + "\ncircumference = " + f.circumference();
         }
-        return "surface = " + f.surface() + "\ncircumference = " + f.circumference();
+        else
+            return null;
     }
 }

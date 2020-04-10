@@ -7,14 +7,21 @@ import static org.junit.jupiter.api.Assertions.*;
 class FiguryTest {
 
     @Test
-    void isFigure() {
+    void isFigureTest() {
+        assertThrows( IllegalArgumentException.class,()->Figury.isFigure(new String[] {"g"}));
+        assertThrows( IllegalArgumentException.class,()->Figury.isFigure(new String[] {"j"}),"Shape 'j' does not exist");
+        assertThrows( IndexOutOfBoundsException.class,()->Figury.isFigure(new String[] {}));
+
+        assertEquals("c",Figury.isFigure(new String[] {"c"}));
     }
 
     @Test
-    void hasValidArgs() {
+    void hasValidArgsTest() {
+
     }
 
     @Test
-    void calculate() {
+    void calculateTest() {
+
     }
 }

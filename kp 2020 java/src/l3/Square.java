@@ -22,7 +22,7 @@ public class Square extends Quadrangle {
     }
 
     /**
-     * @return surface area of rectangle
+     * @return surface area of square
      */
     public double surface (){
         return sides[0]*sides[0];
