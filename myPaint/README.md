@@ -3,12 +3,14 @@ MyPaint
 Programing Course Object-oriented programming course at Wroclaw University of Science and Technology 2020
 
 List 4 - create basic paint app
+
 Usage
 ----
 Run Command:
 
     `javac sdsd`
     `dsdsdsds`
+    
 Requirements
 ----
 * 1 - implement crating figures with a mouse

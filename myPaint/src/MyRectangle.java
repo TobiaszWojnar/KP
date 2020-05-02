@@ -10,6 +10,11 @@ public class MyRectangle extends MyShapes{
         rect[1]=second;
         setDimension();
     }
+    public void setSecond (int x, int y){
+        rect[1][0]=x;
+        rect[1][1]=y;
+        setDimension();
+    }
     public void setDimension(){
         rect[2][0]=Math.abs(rect[0][0]-rect[1][0]); //do we want abs
         rect[2][1]=Math.abs(rect[0][1]-rect[1][1]); //do we want abs

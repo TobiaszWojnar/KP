@@ -2,27 +2,24 @@ import java.awt.*;
 
 public class Triangle extends MyShapes{
     private Color color;
-    private int[][] triangle = new int[3][2];//triangle[0] = first point; triangle[1] = second point;
+    private int[][] points = new int[2][3];//triangle[0] = first point; triangle[1] = second point;
 
-    public Triangle(int[] first, int[] second, int[] third, Color color){
-        triangle[0]=first;
-        triangle[1]=second;
-        triangle[2]=third;
+    public Triangle(int[] x, int[] y, Color color){
+        points[0]=x;
+        points[1]=y;
         this.color=color;
     }
     public int[] getX(){
-        int[] x = new int[3];
-        x[0]=triangle[0][0];
-        x[1]=triangle[1][0];
-        x[2]=triangle[2][0];
-        return x;
+        return points[0];
     }
     public int[] getY(){
-        int[] y = new int[3];
-        y[0]=triangle[0][1];
-        y[1]=triangle[1][1];
-        y[2]=triangle[2][1];
-        return y;
+        return points[1];
+    }
+    public int getX(int point){
+        return points[0][point];
+    }
+    public int getY(int point){
+        return points[1][point];
     }
     @Override
     public void setColor(Color newColor) {
@@ -32,5 +29,14 @@ public class Triangle extends MyShapes{
     @Override
     public Color getColor() {
         return color;
+    }
+
+    public void setSecond(int x, int y) {
+        points[0][1]=x;
+        points[1][1]=y;
+    }
+    public void setThird(int x, int y) {
+        points[0][2]=x;
+        points[1][2]=y;
     }
 }

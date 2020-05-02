@@ -5,7 +5,10 @@ public class MyMenu extends JMenuBar{
     JMenuItem mCircle;
     JMenuItem mRect;
     JMenuItem mTriangle;
+
     public MyMenu(MyCanvas c){
+        c.setMenu(this);
+
         JMenu mFile = new JMenu("File");
         mFile.setMaximumSize(new Dimension(80, mFile.getPreferredSize().height));
         add(mFile);
@@ -48,23 +51,24 @@ public class MyMenu extends JMenuBar{
                              "author:  Tobiasz Wojnar";
             mInfo.addActionListener(actionEvent -> JOptionPane.showMessageDialog(null, message,"Info",JOptionPane.INFORMATION_MESSAGE));
 
-            mCircle.addActionListener(actionEvent -> {
-            setMenu(mCircle);
+        mCircle.addActionListener(actionEvent -> {
+            setMenuOption(mCircle);
             c.setOption('c');
         });
-            mRect.addActionListener(actionEvent -> {
-            setMenu(mRect);
+        mRect.addActionListener(actionEvent -> {
+            setMenuOption(mRect);
             c.setOption('r');
         });
-            mTriangle.addActionListener(actionEvent -> {
-            setMenu(mTriangle);
+        mTriangle.addActionListener(actionEvent -> {
+            setMenuOption(mTriangle);
             c.setOption('t');
         });
     }
-    public void setMenu(JMenuItem mItem){
+    public void setMenuOption(JMenuItem mItem){
         mCircle.setEnabled(true);
         mRect.setEnabled(true);
         mTriangle.setEnabled(true);
-        mItem.setEnabled(false);
+        if(mItem!=null)
+            mItem.setEnabled(false);
     }
 }
