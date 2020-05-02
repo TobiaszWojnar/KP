@@ -1,13 +1,16 @@
-#MyPaint
-##Programing Course List 4 - create basic paint app
-Object-oriented programming course at Wroclaw University of Science and Technology 2020
-####Usage
+MyPaint
+=====
+Programing Course Object-oriented programming course at Wroclaw University of Science and Technology 2020
+
+List 4 - create basic paint app
+Usage
+----
 Run Command:
 
     `javac sdsd`
     `dsdsdsds`
-
-####Requirements
+Requirements
+----
 * 1 - implement crating figures with a mouse
     * [x] circle, rectangle, triangle
     
@@ -23,6 +26,7 @@ Run Command:
     * [ ] generate documentation with `javadoc` and `doxygen`
     * [x] don't use packages and javafx
 
-####What I Learned
+What I Learned
+----
 * making GUI
 * using Swing
