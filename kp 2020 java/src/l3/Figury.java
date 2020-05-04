@@ -41,7 +41,7 @@ public class Figury {
                 }
             }
         } catch (IllegalArgumentException | IndexOutOfBoundsException e){
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println(e.getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ public class Figury {
                 if (param[i] < 0){
                     throw new IllegalArgumentException(param[i] + " is not positive number");
                 }
-            } catch (NumberFormatException ex) {//TODO
+            } catch (NumberFormatException ex) {
                 return null;
             }
         }

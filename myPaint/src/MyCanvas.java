@@ -3,12 +3,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-
+/**
+ * Menu class extends Canvas and implements listeners for mouse movement
+ * Contains all shapes and state of program
+ */
 public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     public ArrayList<MyShapes> shapes;
     private Color activeColor = Color.BLACK;
-    private char option;
+    private char appState;
     private int painting;
     private int activeShape;
     private MyMenu menu;
@@ -18,16 +21,28 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
     double rescaleFactor;
 
     /**
-     * option   {c,r,t} > creating {circle,rectangle,triangle}
-     *          '0'     > no action
-     *          'e'     > editing active figure
+     * Constructor of canvas
+     * adds listeners for mouse movement
+     * Parameters:
+     * appState 'c' >   creating circle
+     *          'r' >   creating rectangle
+     *          't' >   creating triangle
+     *          '0' >   no action
+     *          'e' > editing active figure
+     * shapes   - list of all shapes
+     * activeShape - index of active shape
+     * painting: equals '0' when no new points have been painted
+     *           equals '1' when 1 point of new figure has been painted
+     *           equals '2' when 1 point of new figure has been painted (only for triangle)
+     * moving   - equals true if moving active figure
+     * movingPoint - coordinates of point from which we move figure
      */
     public MyCanvas(){
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
 
-        option = '0';
+        appState = '0';
         shapes = new ArrayList<>();
         activeShape=0;
         painting = 0;
@@ -36,8 +51,12 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
         movingVector=new int[2];
         rescaleFactor=.95;
 
-        paintSth();
+        //paintSth();
     }
+
+    /**
+     * Paints all figures from shapes
+     */
     public void paint(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
         for(MyShapes s:shapes){
@@ -57,7 +76,7 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                 }
             }catch (Exception notCircle){
                 try{
-                    MyRectangle r = (MyRectangle) s;
+                    MyRectangle r = (MyRectangle)s;
                     if(moving&&shapes.indexOf(s)==activeShape) {
                         g2d.fillRect(
                                 Math.min(r.getRect()[0][0], r.getRect()[1][0])+movingVector[0],
@@ -65,7 +84,11 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                                 r.getRect()[2][0],
                                 r.getRect()[2][1]);
                     } else {
-                        g2d.fillRect(Math.min(r.getRect()[0][0], r.getRect()[1][0]), Math.min(r.getRect()[0][1], r.getRect()[1][1]), r.getRect()[2][0], r.getRect()[2][1]);
+                        g2d.fillRect(
+                                Math.min(r.getRect()[0][0], r.getRect()[1][0]),
+                                Math.min(r.getRect()[0][1], r.getRect()[1][1]),
+                                r.getRect()[2][0],
+                                r.getRect()[2][1]);
                     }
                 }catch (Exception notRect){
                     try{
@@ -81,13 +104,17 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                         } else {
                             g2d.fillPolygon(t.getX(), t.getY(), 3);
                         }
-                    }catch (Exception notTriangle){
+                    }catch (Exception ignored){
                         
                     }
                 }
             }
         }
     }
+
+    /**
+     * @return index of figure in which we clicked or -1 if no such figure existed
+     */
     private int pointInShape(MouseEvent mE){
         for(MyShapes s:shapes){
             if(s.pointIn(mE))
@@ -96,24 +123,119 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
         return -1;
     }
 
+    /**
+     * sets menu
+     * @param menu
+     */
     public void setMenu(MyMenu menu) {
         this.menu = menu;
     }
-    public void setOption(char option) {
-        this.option = option;
+
+    /**
+     * sets state of program
+     * @param appState one of 5 states
+     * 'c' >    creating circle
+     * 'r' >    creating rectangle
+     * 't' >    creating triangle
+     * '0' >    no action
+     * 'e' >    editing active figure
+     */
+    public void setAppState(char appState) {
+        this.appState = appState;
     }
+
+    /**
+     * @return active color
+     */
     public Color getColor(){
         return activeColor;
     }
 
+    /**
+     * @param activeColor sets active color
+     */
     public void setColor(Color activeColor) {
         this.activeColor=activeColor;
     }
+
+    /**
+     * @return parameters of all shapes as String
+     * each figure in new line, values separated by tabulators
+     */
+    public String savingPaint(){
+        StringBuilder result = new StringBuilder();
+        for(MyShapes s:shapes){
+            result.append(s.toFile());
+        }
+        return result.toString();
+    }
+
+    /**
+     * reads figure parameters form String and adds them to list of shapes
+     * @param data parameters of all shapes as String
+     * each figure in new line, values separated by tabulators
+     */
+    public void shapesFromFile (String data){
+        String [] newData = data.split("\n");
+        String[] shapeData;
+        for(String s: newData){
+            shapeData = s.split("\t");
+            switch (shapeData[0]) {
+                case "C":
+                    if (shapeData.length == 7) {
+                        Circle c = new Circle(
+                                new int[]{Integer.parseInt(shapeData[1]), Integer.parseInt(shapeData[2])},
+                                Double.parseDouble(shapeData[3]),
+                                new Color(Integer.parseInt(shapeData[4]), Integer.parseInt(shapeData[5]), Integer.parseInt(shapeData[6])));
+                        shapes.add(c);
+                    } else
+                        return;
+                    break;
+                case "R":
+                    if (shapeData.length == 8) {
+                        MyRectangle r = new MyRectangle(
+                                new int[]{Integer.parseInt(shapeData[1]), Integer.parseInt(shapeData[2])},
+                                new int[]{Integer.parseInt(shapeData[3]), Integer.parseInt(shapeData[4])},
+                                new Color(Integer.parseInt(shapeData[5]), Integer.parseInt(shapeData[6]), Integer.parseInt(shapeData[7])));
+                        shapes.add(r);
+                    } else
+                        return;
+                    break;
+                case "T":
+                    if (shapeData.length == 10) {
+                        Triangle t = new Triangle(
+                                new int[]{Integer.parseInt(shapeData[1]), Integer.parseInt(shapeData[2]), Integer.parseInt(shapeData[3])},
+                                new int[]{Integer.parseInt(shapeData[4]), Integer.parseInt(shapeData[5]), Integer.parseInt(shapeData[6])},
+                                new Color(Integer.parseInt(shapeData[7]), Integer.parseInt(shapeData[8]), Integer.parseInt(shapeData[9])));
+                        shapes.add(t);
+                    } else
+                        return;
+                    break;
+                default:
+                    return;
+            }
+        }
+        repaint();
+    }
+
+    /**
+     * listener for mouse clicked
+     * if crating figures
+     *      left clicks adds points
+     *      right click stops action
+     * right click if inside of figure sets it's as active figure and a color menu will open
+     * if in editing active figure
+     *      by left clicking inside active shape might be in moving state
+     *      right click stops action
+     * if in moving active figure
+     *      by left clicking you stop moving it
+     * @param mE MouseEvent
+     */
     @Override
     public void mouseClicked(MouseEvent mE) {
 
         if(SwingUtilities.isLeftMouseButton(mE)){
-            switch (option){
+            switch (appState){
                 case 'c':
                     if(painting==0) {
                         shapes.add(new Circle(new int[]{mE.getX(), mE.getY()}, 0, activeColor));
@@ -184,9 +306,9 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
             menu.setMenuOption(null);
             activeShape = pointInShape(mE);
             if(pointInShape(mE)==-1)
-                setOption('0');
+                setAppState('0');
             else{
-                setOption('e');
+                setAppState('e');
                 Color temp=JColorChooser.showDialog(null, "", shapes.get(activeShape).getColor());
                 if(temp!=null) {
                     shapes.get(activeShape).setColor(temp);
@@ -194,13 +316,17 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
             }
         }
         repaint();
-            System.out.println(mE.getX()+"\t"+ mE.getY());
-
     }
+
+    /**
+     * if creating figure will update it's shape
+     * in moving active figure will update it's coordinates
+     * @param mE coordinates
+     */
     @Override
     public void mouseMoved(MouseEvent mE) {
-        if(painting!=0){
-            switch (option) {
+        if(painting>0){
+            switch (appState) {
                 case 'c':
                     Circle c = (Circle) shapes.get(shapes.size() - 1);
                     double radius = Math.sqrt((mE.getY() - c.getCenter()[1]) * (mE.getY() - c.getCenter()[1]) + (mE.getX() - c.getCenter()[0]) * (mE.getX() - c.getCenter()[0]));
@@ -220,16 +346,11 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                         t.setThird(mE.getX(), mE.getY());
                     }
                     break;
-                case 'e':
-                    if(moving)
-                        System.out.println(mE.getX()+"\t"+mE.getY());
-                    movingVector=new int[]{mE.getX()-movingPoint[0],mE.getY()-movingPoint[1]};
-                    break;
                 default:
                     break;
             }
         }else{
-            if(option=='e'&&moving){
+            if(appState=='e'&&moving){
                 movingVector=new int[]{mE.getX()-movingPoint[0],mE.getY()-movingPoint[1]};
             }
         }
@@ -238,41 +359,39 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
 
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
-
     }
 
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
-
     }
 
     @Override
     public void mouseEntered(MouseEvent mouseEvent) {
-
     }
 
     @Override
     public void mouseExited(MouseEvent mouseEvent) {
-
     }
 
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
-
     }
 
-
-
+    /**
+     * if in editing state enables rescaling active figure
+     * @param mWE wheel movement
+     */
     @Override
     public void mouseWheelMoved(MouseWheelEvent mWE) {
         double factor=rescaleFactor;
-        if(option=='e') {
+        if(appState=='e') {
             if (mWE.getWheelRotation() < 0)
                 factor = 1 / factor;
             shapes.get(activeShape).resize(factor);
             repaint();
         }
     }
+    /*
     public void paintSth (){
         Circle c1 = new Circle(new int[] {12,14},40,Color.CYAN);
         Circle c2 = new Circle(new int[] {200,214},30,Color.RED);
@@ -284,48 +403,5 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
         shapes.add(t1);
         activeShape=+4;
     }
-    public String savingPaint(){
-        StringBuilder result = new StringBuilder();
-        for(MyShapes s:shapes){
-            result.append(s.toFile());
-        }
-        return result.toString();
-    }
-    public void shapesFromFile (String data){
-        String [] newData = data.split("\n");
-        String[] shapeData;
-        for(String s: newData){
-            shapeData = s.split("\t");
-            if(shapeData[0].equals("C")){
-                if(shapeData.length==7){
-                    Circle c = new Circle(
-                            new int[]{Integer.parseInt(shapeData[1]),Integer.parseInt(shapeData[2])},
-                            Double.parseDouble(shapeData[3]),
-                            new Color(Integer.parseInt(shapeData[4]),Integer.parseInt(shapeData[5]),Integer.parseInt(shapeData[6])));
-                    shapes.add(c);
-                }else
-                    return;
-            }else if(shapeData[0].equals("R")){
-                if(shapeData.length==8){
-                    MyRectangle r = new MyRectangle(
-                            new int[]{Integer.parseInt(shapeData[1]),Integer.parseInt(shapeData[2])},
-                            new int[]{Integer.parseInt(shapeData[3]),Integer.parseInt(shapeData[4])},
-                            new Color(Integer.parseInt(shapeData[5]),Integer.parseInt(shapeData[6]),Integer.parseInt(shapeData[7])));
-                    shapes.add(r);
-                }else
-                    return;
-            }else if(shapeData[0].equals("T")){
-                if(shapeData.length==10){
-                    Triangle t = new Triangle(
-                            new int[]{Integer.parseInt(shapeData[1]),Integer.parseInt(shapeData[2]),Integer.parseInt(shapeData[3])},
-                            new int[]{Integer.parseInt(shapeData[4]),Integer.parseInt(shapeData[5]),Integer.parseInt(shapeData[6])},
-                            new Color(Integer.parseInt(shapeData[7]),Integer.parseInt(shapeData[8]),Integer.parseInt(shapeData[9])));
-                    shapes.add(t);
-                }else
-                    return;
-            }else
-                return;
-        }
-        repaint();
-    }
+*/
 }

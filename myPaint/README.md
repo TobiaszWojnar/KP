@@ -8,8 +8,8 @@ Usage
 ----
 Run Command:
 
-    `javac sdsd`
-    `dsdsdsds`
+    `cd src
+     javac *.java`
     
 Requirements
 ----
@@ -25,9 +25,9 @@ Requirements
 * [x] enable saving and opening from file
 
     
-* [ ] other requirements:
+* [x] other requirements:
     * [x] button Info
-    * [ ] generate documentation with `javadoc` and `doxygen`
+    * [x] generate documentation with `javadoc` and `doxygen`
     * [x] don't use packages and javafx
 
 What I Learned
@@ -37,3 +37,4 @@ What I Learned
 * very painfully difference between `=+` and `+=`
 * implementing interfaces and methods 
 * using MouseListeners
+* generating doxygen documentation

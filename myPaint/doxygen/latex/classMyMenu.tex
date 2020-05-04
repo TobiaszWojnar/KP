@@ -1,0 +1,77 @@
+\hypertarget{classMyMenu}{}\section{My\+Menu Class Reference}
+\label{classMyMenu}\index{My\+Menu@{My\+Menu}}
+
+
+Inheritance diagram for My\+Menu\+:
+% FIG 0
+
+
+Collaboration diagram for My\+Menu\+:
+% FIG 1
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMyMenu_a64ccf36f2ef35ebb02a4dcac3ae8ea03}{My\+Menu} (\hyperlink{classMyPaint}{My\+Paint} my\+Paint)
+\item 
+void \hyperlink{classMyMenu_a8420816b90a535a554eead927c40ef95}{set\+Menu\+Option} (J\+Menu\+Item m\+Item)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static String \hyperlink{classMyMenu_a76a17ad2e9001ae8d7caf0ff62eb2d37}{read\+File} (String path)  throws I\+O\+Exception 
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Menu class extends J\+Menu\+Bar changes type of figure that can be created enables saving and opening files 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classMyMenu_a64ccf36f2ef35ebb02a4dcac3ae8ea03}\label{classMyMenu_a64ccf36f2ef35ebb02a4dcac3ae8ea03}} 
+\index{My\+Menu@{My\+Menu}!My\+Menu@{My\+Menu}}
+\index{My\+Menu@{My\+Menu}!My\+Menu@{My\+Menu}}
+\subsubsection{\texorpdfstring{My\+Menu()}{MyMenu()}}
+{\footnotesize\ttfamily My\+Menu.\+My\+Menu (\begin{DoxyParamCaption}\item[{\hyperlink{classMyPaint}{My\+Paint}}]{my\+Paint }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor of menu 
+\begin{DoxyParams}{Parameters}
+{\em my\+Paint} & pointer to application \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classMyMenu_a76a17ad2e9001ae8d7caf0ff62eb2d37}\label{classMyMenu_a76a17ad2e9001ae8d7caf0ff62eb2d37}} 
+\index{My\+Menu@{My\+Menu}!read\+File@{read\+File}}
+\index{read\+File@{read\+File}!My\+Menu@{My\+Menu}}
+\subsubsection{\texorpdfstring{read\+File()}{readFile()}}
+{\footnotesize\ttfamily static String My\+Menu.\+read\+File (\begin{DoxyParamCaption}\item[{String}]{path }\end{DoxyParamCaption}) throws I\+O\+Exception\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Reads form file 
+\begin{DoxyParams}{Parameters}
+{\em path} & path to file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+file content 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em I\+O\+Exception} & if file is missing \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classMyMenu_a8420816b90a535a554eead927c40ef95}\label{classMyMenu_a8420816b90a535a554eead927c40ef95}} 
+\index{My\+Menu@{My\+Menu}!set\+Menu\+Option@{set\+Menu\+Option}}
+\index{set\+Menu\+Option@{set\+Menu\+Option}!My\+Menu@{My\+Menu}}
+\subsubsection{\texorpdfstring{set\+Menu\+Option()}{setMenuOption()}}
+{\footnotesize\ttfamily void My\+Menu.\+set\+Menu\+Option (\begin{DoxyParamCaption}\item[{J\+Menu\+Item}]{m\+Item }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Changes selected option in menu 
+\begin{DoxyParams}{Parameters}
+{\em m\+Item} & item that is selected \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+My\+Menu.\+java\end{DoxyCompactItemize}

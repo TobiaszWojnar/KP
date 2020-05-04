@@ -1,0 +1,177 @@
+\hypertarget{classMyCanvas}{}\section{My\+Canvas Class Reference}
+\label{classMyCanvas}\index{My\+Canvas@{My\+Canvas}}
+
+
+Inheritance diagram for My\+Canvas\+:
+% FIG 0
+
+
+Collaboration diagram for My\+Canvas\+:
+% FIG 1
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMyCanvas_ad66ffeff27547650fe0cbc19c67653b6}{My\+Canvas} ()
+\item 
+void \hyperlink{classMyCanvas_ac040ca723b00a27e0a3001745f745c02}{paint} (Graphics g)
+\item 
+void \hyperlink{classMyCanvas_a62132badab6a4da5f847d3815cc40c44}{set\+Menu} (\hyperlink{classMyMenu}{My\+Menu} menu)
+\item 
+void \hyperlink{classMyCanvas_a6f6db840dc7e9a6e4a42212912f01286}{set\+App\+State} (char app\+State)
+\item 
+Color \hyperlink{classMyCanvas_aa10bb36820671c508e71f9e8142f7178}{get\+Color} ()
+\item 
+void \hyperlink{classMyCanvas_a13b35b0c7537a55f61ba289697008e8f}{set\+Color} (Color active\+Color)
+\item 
+String \hyperlink{classMyCanvas_aa3ac394f78dd7faa9cfba16b15b3ecfa}{saving\+Paint} ()
+\item 
+void \hyperlink{classMyCanvas_a8d826ca38478d6a5b5cae7f418a898b3}{shapes\+From\+File} (String data)
+\item 
+void \hyperlink{classMyCanvas_aeeeef0f08f75509cb89d872ffda7a759}{mouse\+Clicked} (Mouse\+Event mE)
+\item 
+void \hyperlink{classMyCanvas_a50ce844ceff17225cb455a282514c733}{mouse\+Moved} (Mouse\+Event mE)
+\item 
+\mbox{\Hypertarget{classMyCanvas_a062cf9b33725644d10e209a1d48a022d}\label{classMyCanvas_a062cf9b33725644d10e209a1d48a022d}} 
+void {\bfseries mouse\+Pressed} (Mouse\+Event mouse\+Event)
+\item 
+\mbox{\Hypertarget{classMyCanvas_a3ce0152266916020e9ae3381742a8cf2}\label{classMyCanvas_a3ce0152266916020e9ae3381742a8cf2}} 
+void {\bfseries mouse\+Released} (Mouse\+Event mouse\+Event)
+\item 
+\mbox{\Hypertarget{classMyCanvas_a223525c9eed93d7b3ebc0a82ca484dec}\label{classMyCanvas_a223525c9eed93d7b3ebc0a82ca484dec}} 
+void {\bfseries mouse\+Entered} (Mouse\+Event mouse\+Event)
+\item 
+\mbox{\Hypertarget{classMyCanvas_a86660d0047ac7ec9e7c29e53b1a64a5a}\label{classMyCanvas_a86660d0047ac7ec9e7c29e53b1a64a5a}} 
+void {\bfseries mouse\+Exited} (Mouse\+Event mouse\+Event)
+\item 
+\mbox{\Hypertarget{classMyCanvas_ade21396b96145a790c55c01c115b10a5}\label{classMyCanvas_ade21396b96145a790c55c01c115b10a5}} 
+void {\bfseries mouse\+Dragged} (Mouse\+Event mouse\+Event)
+\item 
+void \hyperlink{classMyCanvas_a700a9732a3ad85bfc2c000188db65080}{mouse\+Wheel\+Moved} (Mouse\+Wheel\+Event m\+WE)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classMyCanvas_a073c97b8422d06ddaf2c29114985f46d}\label{classMyCanvas_a073c97b8422d06ddaf2c29114985f46d}} 
+Array\+List$<$ \hyperlink{classMyShapes}{My\+Shapes} $>$ {\bfseries shapes}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Menu class extends Canvas and implements listeners for mouse movement Contains all shapes and state of program 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classMyCanvas_ad66ffeff27547650fe0cbc19c67653b6}\label{classMyCanvas_ad66ffeff27547650fe0cbc19c67653b6}} 
+\index{My\+Canvas@{My\+Canvas}!My\+Canvas@{My\+Canvas}}
+\index{My\+Canvas@{My\+Canvas}!My\+Canvas@{My\+Canvas}}
+\subsubsection{\texorpdfstring{My\+Canvas()}{MyCanvas()}}
+{\footnotesize\ttfamily My\+Canvas.\+My\+Canvas (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor of canvas adds listeners for mouse movement Parameters\+: app\+State \textquotesingle{}c\textquotesingle{} $>$ creating circle \textquotesingle{}r\textquotesingle{} $>$ creating rectangle \textquotesingle{}t\textquotesingle{} $>$ creating triangle \textquotesingle{}0\textquotesingle{} $>$ no action \textquotesingle{}e\textquotesingle{} $>$ editing active figure shapes -\/ list of all shapes active\+Shape -\/ index of active shape painting\+: equals \textquotesingle{}0\textquotesingle{} when no new points have been painted equals \textquotesingle{}1\textquotesingle{} when 1 point of new figure has been painted equals \textquotesingle{}2\textquotesingle{} when 1 point of new figure has been painted (only for triangle) moving -\/ equals true if moving active figure moving\+Point -\/ coordinates of point from which we move figure 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classMyCanvas_aa10bb36820671c508e71f9e8142f7178}\label{classMyCanvas_aa10bb36820671c508e71f9e8142f7178}} 
+\index{My\+Canvas@{My\+Canvas}!get\+Color@{get\+Color}}
+\index{get\+Color@{get\+Color}!My\+Canvas@{My\+Canvas}}
+\subsubsection{\texorpdfstring{get\+Color()}{getColor()}}
+{\footnotesize\ttfamily Color My\+Canvas.\+get\+Color (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+active color 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classMyCanvas_aeeeef0f08f75509cb89d872ffda7a759}\label{classMyCanvas_aeeeef0f08f75509cb89d872ffda7a759}} 
+\index{My\+Canvas@{My\+Canvas}!mouse\+Clicked@{mouse\+Clicked}}
+\index{mouse\+Clicked@{mouse\+Clicked}!My\+Canvas@{My\+Canvas}}
+\subsubsection{\texorpdfstring{mouse\+Clicked()}{mouseClicked()}}
+{\footnotesize\ttfamily void My\+Canvas.\+mouse\+Clicked (\begin{DoxyParamCaption}\item[{Mouse\+Event}]{mE }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+listener for mouse clicked if crating figures left clicks adds points right click stops action right click if inside of figure sets it\textquotesingle{}s as active figure and a color menu will open if in editing active figure by left clicking inside active shape might be in moving state right click stops action if in moving active figure by left clicking you stop moving it 
+\begin{DoxyParams}{Parameters}
+{\em mE} & Mouse\+Event \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classMyCanvas_a50ce844ceff17225cb455a282514c733}\label{classMyCanvas_a50ce844ceff17225cb455a282514c733}} 
+\index{My\+Canvas@{My\+Canvas}!mouse\+Moved@{mouse\+Moved}}
+\index{mouse\+Moved@{mouse\+Moved}!My\+Canvas@{My\+Canvas}}
+\subsubsection{\texorpdfstring{mouse\+Moved()}{mouseMoved()}}
+{\footnotesize\ttfamily void My\+Canvas.\+mouse\+Moved (\begin{DoxyParamCaption}\item[{Mouse\+Event}]{mE }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+if creating figure will update it\textquotesingle{}s shape in moving active figure will update it\textquotesingle{}s coordinates 
+\begin{DoxyParams}{Parameters}
+{\em mE} & coordinates \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classMyCanvas_a700a9732a3ad85bfc2c000188db65080}\label{classMyCanvas_a700a9732a3ad85bfc2c000188db65080}} 
+\index{My\+Canvas@{My\+Canvas}!mouse\+Wheel\+Moved@{mouse\+Wheel\+Moved}}
+\index{mouse\+Wheel\+Moved@{mouse\+Wheel\+Moved}!My\+Canvas@{My\+Canvas}}
+\subsubsection{\texorpdfstring{mouse\+Wheel\+Moved()}{mouseWheelMoved()}}
+{\footnotesize\ttfamily void My\+Canvas.\+mouse\+Wheel\+Moved (\begin{DoxyParamCaption}\item[{Mouse\+Wheel\+Event}]{m\+WE }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+if in editing state enables rescaling active figure 
+\begin{DoxyParams}{Parameters}
+{\em m\+WE} & wheel movement \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classMyCanvas_ac040ca723b00a27e0a3001745f745c02}\label{classMyCanvas_ac040ca723b00a27e0a3001745f745c02}} 
+\index{My\+Canvas@{My\+Canvas}!paint@{paint}}
+\index{paint@{paint}!My\+Canvas@{My\+Canvas}}
+\subsubsection{\texorpdfstring{paint()}{paint()}}
+{\footnotesize\ttfamily void My\+Canvas.\+paint (\begin{DoxyParamCaption}\item[{Graphics}]{g }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Paints all figures from shapes \mbox{\Hypertarget{classMyCanvas_aa3ac394f78dd7faa9cfba16b15b3ecfa}\label{classMyCanvas_aa3ac394f78dd7faa9cfba16b15b3ecfa}} 
+\index{My\+Canvas@{My\+Canvas}!saving\+Paint@{saving\+Paint}}
+\index{saving\+Paint@{saving\+Paint}!My\+Canvas@{My\+Canvas}}
+\subsubsection{\texorpdfstring{saving\+Paint()}{savingPaint()}}
+{\footnotesize\ttfamily String My\+Canvas.\+saving\+Paint (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+parameters of all shapes as String each figure in new line, values separated by tabulators 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classMyCanvas_a6f6db840dc7e9a6e4a42212912f01286}\label{classMyCanvas_a6f6db840dc7e9a6e4a42212912f01286}} 
+\index{My\+Canvas@{My\+Canvas}!set\+App\+State@{set\+App\+State}}
+\index{set\+App\+State@{set\+App\+State}!My\+Canvas@{My\+Canvas}}
+\subsubsection{\texorpdfstring{set\+App\+State()}{setAppState()}}
+{\footnotesize\ttfamily void My\+Canvas.\+set\+App\+State (\begin{DoxyParamCaption}\item[{char}]{app\+State }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+sets state of program 
+\begin{DoxyParams}{Parameters}
+{\em app\+State} & one of 5 states \textquotesingle{}c\textquotesingle{} $>$ creating circle \textquotesingle{}r\textquotesingle{} $>$ creating rectangle \textquotesingle{}t\textquotesingle{} $>$ creating triangle \textquotesingle{}0\textquotesingle{} $>$ no action \textquotesingle{}e\textquotesingle{} $>$ editing active figure \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classMyCanvas_a13b35b0c7537a55f61ba289697008e8f}\label{classMyCanvas_a13b35b0c7537a55f61ba289697008e8f}} 
+\index{My\+Canvas@{My\+Canvas}!set\+Color@{set\+Color}}
+\index{set\+Color@{set\+Color}!My\+Canvas@{My\+Canvas}}
+\subsubsection{\texorpdfstring{set\+Color()}{setColor()}}
+{\footnotesize\ttfamily void My\+Canvas.\+set\+Color (\begin{DoxyParamCaption}\item[{Color}]{active\+Color }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em active\+Color} & sets active color \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classMyCanvas_a62132badab6a4da5f847d3815cc40c44}\label{classMyCanvas_a62132badab6a4da5f847d3815cc40c44}} 
+\index{My\+Canvas@{My\+Canvas}!set\+Menu@{set\+Menu}}
+\index{set\+Menu@{set\+Menu}!My\+Canvas@{My\+Canvas}}
+\subsubsection{\texorpdfstring{set\+Menu()}{setMenu()}}
+{\footnotesize\ttfamily void My\+Canvas.\+set\+Menu (\begin{DoxyParamCaption}\item[{\hyperlink{classMyMenu}{My\+Menu}}]{menu }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+sets menu 
+\begin{DoxyParams}{Parameters}
+{\em menu} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classMyCanvas_a8d826ca38478d6a5b5cae7f418a898b3}\label{classMyCanvas_a8d826ca38478d6a5b5cae7f418a898b3}} 
+\index{My\+Canvas@{My\+Canvas}!shapes\+From\+File@{shapes\+From\+File}}
+\index{shapes\+From\+File@{shapes\+From\+File}!My\+Canvas@{My\+Canvas}}
+\subsubsection{\texorpdfstring{shapes\+From\+File()}{shapesFromFile()}}
+{\footnotesize\ttfamily void My\+Canvas.\+shapes\+From\+File (\begin{DoxyParamCaption}\item[{String}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+reads figure parameters form String and adds them to list of shapes 
+\begin{DoxyParams}{Parameters}
+{\em data} & parameters of all shapes as String each figure in new line, values separated by tabulators \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+My\+Canvas.\+java\end{DoxyCompactItemize}

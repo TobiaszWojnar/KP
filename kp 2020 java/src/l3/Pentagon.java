@@ -16,7 +16,7 @@ public class Pentagon extends Figure {
      * Constructor of pentagon, since we create only regular pentagons it needs only one parameter
      * @param side of pentagon, is positive, double precision number
      */
-    public Pentagon (double side){//TODO how to create exception if number is not positive
+    public Pentagon ( double side){//TODO how to create exception if number is not positive
         this.side=side;
     }
 
