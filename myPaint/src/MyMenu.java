@@ -1,23 +1,61 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class MyMenu extends JMenuBar{
     JMenuItem mCircle;
     JMenuItem mRect;
     JMenuItem mTriangle;
-
+    JFileChooser fileChooser;
     public MyMenu(MyCanvas c){
         c.setMenu(this);
+        fileChooser = new JFileChooser();
 
         JMenu mFile = new JMenu("File");
         mFile.setMaximumSize(new Dimension(80, mFile.getPreferredSize().height));
         add(mFile);
         JMenuItem mSave = new JMenuItem ("Save");
         mFile.add(mSave);
-        JMenuItem mSaveImg = new JMenuItem ("Save as JPG");
-        mFile.add(mSaveImg);
+        mSave.addActionListener(e -> {
+            System.out.println(c.savingPaint());
+
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Specify a file to save");
+
+            int userSelection = fileChooser.showSaveDialog(null);
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave.getAbsolutePath()));
+                    writer.write(c.savingPaint());
+                    writer.close();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
         JMenuItem mOpen = new JMenuItem ("Open");
         mFile.add(mOpen);
+        mOpen.addActionListener(e -> {
+            int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+
+                String filePath = selectedFile.getAbsolutePath();
+
+                try {
+                    String content = readFile(filePath);
+                    c.shapesFromFile(content);
+                } catch (IOException iOE) {
+
+                }
+            }
+        });
         JMenuItem mExit = new JMenuItem ("Exit");
         mFile.add(mExit);
 
@@ -38,8 +76,11 @@ public class MyMenu extends JMenuBar{
         mColor.setBackground(c.getColor());
         add(mColor);
         mColor.addActionListener(e -> {
-            c.setColor(JColorChooser.showDialog(null, "", c.getColor()));
-            mColor.setBackground(c.getColor());
+            Color temp=JColorChooser.showDialog(null, "", c.getColor());
+            if(temp!=null) {
+                c.setColor(temp);
+                mColor.setBackground(c.getColor());
+            }
         });
 
         JMenuItem mInfo = new JMenuItem ("Info");
@@ -70,5 +111,8 @@ public class MyMenu extends JMenuBar{
         mTriangle.setEnabled(true);
         if(mItem!=null)
             mItem.setEnabled(false);
+    }
+    public static String readFile(String path) throws IOException {
+        return Files.readString(Paths.get(path));
     }
 }

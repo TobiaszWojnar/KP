@@ -9,10 +9,13 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
     public ArrayList<MyShapes> shapes;
     private Color activeColor = Color.BLACK;
     private char option;
-    private int pointsMade;
     private int painting;
     private int activeShape;
     private MyMenu menu;
+    private boolean moving;
+    private int[] movingPoint;
+    private int[] movingVector;
+    double rescaleFactor;
 
     /**
      * option   {c,r,t} > creating {circle,rectangle,triangle}
@@ -26,9 +29,12 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
 
         option = '0';
         shapes = new ArrayList<>();
-        pointsMade = 0;
         activeShape=0;
         painting = 0;
+        moving = false;
+        movingPoint=new int[2];
+        movingVector=new int[2];
+        rescaleFactor=.95;
 
         paintSth();
     }
@@ -38,28 +44,58 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
             g2d.setColor(s.getColor());
             try{
                 Circle c = (Circle)s;
-                g2d.fillOval((int)(c.getCenter()[0]-c.getRadius()),
-                             (int)(c.getCenter()[1]-c.getRadius()),
-                             2*(int)c.getRadius(),
-                             2*(int)c.getRadius());
+                if(moving&&shapes.indexOf(s)==activeShape) {
+                    g2d.fillOval( (int) (c.getCenter()[0] - c.getRadius())+movingVector[0],
+                                 (int) (c.getCenter()[1] - c.getRadius())+movingVector[1],
+                                    (int) (2 * c.getRadius()),
+                                    (int) (2 * c.getRadius()));
+                } else {
+                    g2d.fillOval((int) (c.getCenter()[0] - c.getRadius()),
+                            (int) (c.getCenter()[1] - c.getRadius()),
+                            2 * (int) c.getRadius(),
+                            2 * (int) c.getRadius());
+                }
             }catch (Exception notCircle){
                 try{
-                    MyRectangle r = (MyRectangle)s;
-                    g2d.fillRect(Math.min(r.getRect()[0][0],r.getRect()[1][0]), Math.min(r.getRect()[0][1],r.getRect()[1][1]), r.getRect()[2][0], r.getRect()[2][1]);
+                    MyRectangle r = (MyRectangle) s;
+                    if(moving&&shapes.indexOf(s)==activeShape) {
+                        g2d.fillRect(
+                                Math.min(r.getRect()[0][0], r.getRect()[1][0])+movingVector[0],
+                                Math.min(r.getRect()[0][1], r.getRect()[1][1])+movingVector[1],
+                                r.getRect()[2][0],
+                                r.getRect()[2][1]);
+                    } else {
+                        g2d.fillRect(Math.min(r.getRect()[0][0], r.getRect()[1][0]), Math.min(r.getRect()[0][1], r.getRect()[1][1]), r.getRect()[2][0], r.getRect()[2][1]);
+                    }
                 }catch (Exception notRect){
                     try{
                         Triangle t = (Triangle)s;
                         if(painting==1){
                             g2d.drawLine(t.getX(0),t.getY(0),t.getX(1),t.getY(1));
                         }
-                        g2d.fillPolygon(t.getX(),t.getY(),3);
+                        if(moving&&shapes.indexOf(s)==activeShape) {
+                            g2d.fillPolygon(
+                                    new int[]{t.getX(0)+movingVector[0],t.getX(1)+movingVector[0],t.getX(2)+movingVector[0]},
+                                    new int[]{t.getY(0)+movingVector[1],t.getY(1)+movingVector[1],t.getY(2)+movingVector[1]},
+                                    3);
+                        } else {
+                            g2d.fillPolygon(t.getX(), t.getY(), 3);
+                        }
                     }catch (Exception notTriangle){
-
+                        
                     }
                 }
             }
         }
     }
+    private int pointInShape(MouseEvent mE){
+        for(MyShapes s:shapes){
+            if(s.pointIn(mE))
+                return shapes.indexOf(s);
+        }
+        return -1;
+    }
+
     public void setMenu(MyMenu menu) {
         this.menu = menu;
     }
@@ -127,7 +163,15 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                     }
                     break;
                 case 'e':
-                    //TODO moving?
+                    if(moving) {
+                        shapes.get(activeShape).move(movingPoint, mE);
+                        moving = false;
+                    }else{
+                        if (shapes.get(activeShape).pointIn(mE)) {
+                            moving=true;
+                            movingPoint=new int[]{mE.getX(),mE.getY()};
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -137,11 +181,17 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                 shapes.remove(shapes.size() - 1);
                 painting=0;
             }
-            setOption('0');
             menu.setMenuOption(null);
-            //TODO isIN
-
-            //
+            activeShape = pointInShape(mE);
+            if(pointInShape(mE)==-1)
+                setOption('0');
+            else{
+                setOption('e');
+                Color temp=JColorChooser.showDialog(null, "", shapes.get(activeShape).getColor());
+                if(temp!=null) {
+                    shapes.get(activeShape).setColor(temp);
+                }
+            }
         }
         repaint();
             System.out.println(mE.getX()+"\t"+ mE.getY());
@@ -171,12 +221,19 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                     }
                     break;
                 case 'e':
+                    if(moving)
+                        System.out.println(mE.getX()+"\t"+mE.getY());
+                    movingVector=new int[]{mE.getX()-movingPoint[0],mE.getY()-movingPoint[1]};
                     break;
                 default:
                     break;
             }
-            repaint();
+        }else{
+            if(option=='e'&&moving){
+                movingVector=new int[]{mE.getX()-movingPoint[0],mE.getY()-movingPoint[1]};
+            }
         }
+        repaint();
     }
 
     @Override
@@ -207,8 +264,14 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
 
 
     @Override
-    public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
-
+    public void mouseWheelMoved(MouseWheelEvent mWE) {
+        double factor=rescaleFactor;
+        if(option=='e') {
+            if (mWE.getWheelRotation() < 0)
+                factor = 1 / factor;
+            shapes.get(activeShape).resize(factor);
+            repaint();
+        }
     }
     public void paintSth (){
         Circle c1 = new Circle(new int[] {12,14},40,Color.CYAN);
@@ -220,5 +283,49 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
         Triangle t1 = new Triangle(new int[] {64,64,128}, new int[] {64,128,128}, Color.MAGENTA);
         shapes.add(t1);
         activeShape=+4;
+    }
+    public String savingPaint(){
+        StringBuilder result = new StringBuilder();
+        for(MyShapes s:shapes){
+            result.append(s.toFile());
+        }
+        return result.toString();
+    }
+    public void shapesFromFile (String data){
+        String [] newData = data.split("\n");
+        String[] shapeData;
+        for(String s: newData){
+            shapeData = s.split("\t");
+            if(shapeData[0].equals("C")){
+                if(shapeData.length==7){
+                    Circle c = new Circle(
+                            new int[]{Integer.parseInt(shapeData[1]),Integer.parseInt(shapeData[2])},
+                            Double.parseDouble(shapeData[3]),
+                            new Color(Integer.parseInt(shapeData[4]),Integer.parseInt(shapeData[5]),Integer.parseInt(shapeData[6])));
+                    shapes.add(c);
+                }else
+                    return;
+            }else if(shapeData[0].equals("R")){
+                if(shapeData.length==8){
+                    MyRectangle r = new MyRectangle(
+                            new int[]{Integer.parseInt(shapeData[1]),Integer.parseInt(shapeData[2])},
+                            new int[]{Integer.parseInt(shapeData[3]),Integer.parseInt(shapeData[4])},
+                            new Color(Integer.parseInt(shapeData[5]),Integer.parseInt(shapeData[6]),Integer.parseInt(shapeData[7])));
+                    shapes.add(r);
+                }else
+                    return;
+            }else if(shapeData[0].equals("T")){
+                if(shapeData.length==10){
+                    Triangle t = new Triangle(
+                            new int[]{Integer.parseInt(shapeData[1]),Integer.parseInt(shapeData[2]),Integer.parseInt(shapeData[3])},
+                            new int[]{Integer.parseInt(shapeData[4]),Integer.parseInt(shapeData[5]),Integer.parseInt(shapeData[6])},
+                            new Color(Integer.parseInt(shapeData[7]),Integer.parseInt(shapeData[8]),Integer.parseInt(shapeData[9])));
+                    shapes.add(t);
+                }else
+                    return;
+            }else
+                return;
+        }
+        repaint();
     }
 }
