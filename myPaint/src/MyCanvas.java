@@ -61,71 +61,130 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
         Graphics2D g2d = (Graphics2D) g;
         for(MyShapes s:shapes){
             g2d.setColor(s.getColor());
-            try{
-                Circle c = (Circle)s;
-                if(moving&&shapes.indexOf(s)==activeShape) {
-                    g2d.fillOval( (int) (c.getCenter()[0] - c.getRadius())+movingVector[0],
-                                 (int) (c.getCenter()[1] - c.getRadius())+movingVector[1],
-                                    (int) (2 * c.getRadius()),
-                                    (int) (2 * c.getRadius()));
-                } else {
+            if(shapes.indexOf(s)==activeShape){//TODO drawActive() if is moving
+                paintActive(g2d);
+            }else {
+                if (s instanceof Circle) {
+                    Circle c = (Circle) s;
                     g2d.fillOval((int) (c.getCenter()[0] - c.getRadius()),
                             (int) (c.getCenter()[1] - c.getRadius()),
                             2 * (int) c.getRadius(),
                             2 * (int) c.getRadius());
-                }
-            }catch (Exception notCircle){
-                try{
-                    MyRectangle r = (MyRectangle)s;
-                    if(moving&&shapes.indexOf(s)==activeShape) {
-                        g2d.fillRect(
-                                Math.min(r.getRect()[0][0], r.getRect()[1][0])+movingVector[0],
-                                Math.min(r.getRect()[0][1], r.getRect()[1][1])+movingVector[1],
-                                r.getRect()[2][0],
-                                r.getRect()[2][1]);
-                    } else {
-                        g2d.fillRect(
-                                Math.min(r.getRect()[0][0], r.getRect()[1][0]),
-                                Math.min(r.getRect()[0][1], r.getRect()[1][1]),
-                                r.getRect()[2][0],
-                                r.getRect()[2][1]);
-                    }
-                }catch (Exception notRect){
-                    try{
-                        Triangle t = (Triangle)s;
-                        if(painting==1){
-                            g2d.drawLine(t.getX(0),t.getY(0),t.getX(1),t.getY(1));
-                        }
-                        if(moving&&shapes.indexOf(s)==activeShape) {
-                            g2d.fillPolygon(
-                                    new int[]{t.getX(0)+movingVector[0],t.getX(1)+movingVector[0],t.getX(2)+movingVector[0]},
-                                    new int[]{t.getY(0)+movingVector[1],t.getY(1)+movingVector[1],t.getY(2)+movingVector[1]},
-                                    3);
-                        } else {
-                            g2d.fillPolygon(t.getX(), t.getY(), 3);
-                        }
-                    }catch (Exception ignored){
-                        
-                    }
+
+                } else if (s instanceof MyRectangle) {
+                    MyRectangle r = (MyRectangle) s;
+                    g2d.fillRect(
+                            Math.min(r.getRect()[0][0], r.getRect()[1][0]),
+                            Math.min(r.getRect()[0][1], r.getRect()[1][1]),
+                            r.getRect()[2][0],
+                            r.getRect()[2][1]);
+
+                } else if (s instanceof Triangle) {
+                    Triangle t = (Triangle) s;
+                    g2d.fillPolygon(t.getX(), t.getY(), 3);
                 }
             }
         }
+    }
+    private void paintActive(Graphics2D g2d){
+        MyShapes s = shapes.get(activeShape);
+        g2d.setColor(oppositeColor(s.getColor()));
+        if (s instanceof Circle) {
+            Circle c = (Circle) s;
+            if (moving) {
+                g2d.drawOval((int) (c.getCenter()[0] - c.getRadius()) + movingVector[0]-1,
+                        (int) (c.getCenter()[1] - c.getRadius()) + movingVector[1]-1,
+                        (int) (2 * c.getRadius())+2,
+                        (int) (2 * c.getRadius())+2);
+            } else {
+                g2d.drawOval((int) (c.getCenter()[0] - c.getRadius()-1),
+                        (int) (c.getCenter()[1] - c.getRadius()-1),
+                        2 * (int) c.getRadius()+2,
+                        2 * (int) c.getRadius()+2);
+            }
+            g2d.setColor(s.getColor());
+            if (moving) {
+                g2d.fillOval((int) (c.getCenter()[0] - c.getRadius()) + movingVector[0],
+                        (int) (c.getCenter()[1] - c.getRadius()) + movingVector[1],
+                        (int) (2 * c.getRadius()),
+                        (int) (2 * c.getRadius()));
+            } else {
+                g2d.fillOval((int) (c.getCenter()[0] - c.getRadius()),
+                        (int) (c.getCenter()[1] - c.getRadius()),
+                        2 * (int) c.getRadius(),
+                        2 * (int) c.getRadius());
+            }
+
+        } else if (s instanceof MyRectangle) {
+            MyRectangle r = (MyRectangle) s;
+            if (moving) {
+                g2d.drawRect(
+                        Math.min(r.getRect()[0][0], r.getRect()[1][0]) + movingVector[0]-1,
+                        Math.min(r.getRect()[0][1], r.getRect()[1][1]) + movingVector[1]-1,
+                        r.getRect()[2][0]+1,
+                        r.getRect()[2][1]+1);
+            } else {
+                g2d.drawRect(
+                        Math.min(r.getRect()[0][0], r.getRect()[1][0])-1,
+                        Math.min(r.getRect()[0][1], r.getRect()[1][1])-1,
+                        r.getRect()[2][0]+1,
+                        r.getRect()[2][1]+1);
+            }
+            g2d.setColor(s.getColor());
+            if (moving) {
+                g2d.fillRect(
+                        Math.min(r.getRect()[0][0], r.getRect()[1][0]) + movingVector[0]+1,
+                        Math.min(r.getRect()[0][1], r.getRect()[1][1]) + movingVector[1]+1,
+                        r.getRect()[2][0]-1,
+                        r.getRect()[2][1]-1);
+            } else {
+                g2d.fillRect(
+                        Math.min(r.getRect()[0][0], r.getRect()[1][0]),
+                        Math.min(r.getRect()[0][1], r.getRect()[1][1]),
+                        r.getRect()[2][0],
+                        r.getRect()[2][1]);
+            }
+        } else if (s instanceof Triangle) {
+            Triangle t = (Triangle) s;
+            if (moving) {
+                g2d.drawPolygon(
+                        new int[]{t.getX(0) + movingVector[0], t.getX(1) + movingVector[0], t.getX(2) + movingVector[0]},
+                        new int[]{t.getY(0) + movingVector[1], t.getY(1) + movingVector[1], t.getY(2) + movingVector[1]},
+                        3);
+            } else {
+                g2d.drawPolygon(t.getX(), t.getY(), 3);
+            }
+            g2d.setColor(s.getColor());
+            if (painting == 1) {
+                g2d.drawLine(t.getX(0), t.getY(0), t.getX(1), t.getY(1));
+            }
+            if (moving) {
+                g2d.fillPolygon(
+                        new int[]{t.getX(0) + movingVector[0], t.getX(1) + movingVector[0], t.getX(2) + movingVector[0]},
+                        new int[]{t.getY(0) + movingVector[1], t.getY(1) + movingVector[1], t.getY(2) + movingVector[1]},
+                        3);
+            } else {
+                g2d.fillPolygon(t.getX(), t.getY(), 3);
+            }
+        }
+    }
+    private Color oppositeColor(Color color){
+        return new Color(255-color.getRed(),255-color.getGreen(),255-color.getGreen());
     }
 
     /**
      * @return index of figure in which we clicked or -1 if no such figure existed
      */
     private int pointInShape(MouseEvent mE){
-        for(MyShapes s:shapes){
-            if(s.pointIn(mE))
-                return shapes.indexOf(s);
+        for (int i=shapes.size()-1;i>=0;i--){
+            if(shapes.get(i).pointIn(mE))
+                return i;
         }
         return -1;
     }
 
     /**
-     * sets menu
-     * @param menu
+     * @param menu sets menu
      */
     public void setMenu(MyMenu menu) {
         this.menu = menu;
@@ -133,15 +192,20 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
 
     /**
      * sets state of program
-     * @param appState one of 5 states
+     * @param newAppState one of 5 states
      * 'c' >    creating circle
      * 'r' >    creating rectangle
      * 't' >    creating triangle
      * '0' >    no action
      * 'e' >    editing active figure
      */
-    public void setAppState(char appState) {
-        this.appState = appState;
+    public void setAppState(char newAppState) {
+        if(painting!=0) {
+            shapes.remove(shapes.size() - 1);
+            painting=0;
+        }
+        appState = newAppState;
+        repaint();
     }
 
     /**
@@ -175,7 +239,7 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
      * @param data parameters of all shapes as String
      * each figure in new line, values separated by tabulators
      */
-    public void shapesFromFile (String data){
+    public void addShapesFromFile (String data){
         String [] newData = data.split("\n");
         String[] shapeData;
         for(String s: newData){
@@ -217,6 +281,10 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
         }
         repaint();
     }
+    public void onlyShapesFromFile (String data){
+        shapes.removeAll(shapes);
+        addShapesFromFile(data);
+    }
 
     /**
      * listener for mouse clicked
@@ -233,7 +301,6 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
      */
     @Override
     public void mouseClicked(MouseEvent mE) {
-
         if(SwingUtilities.isLeftMouseButton(mE)){
             switch (appState){
                 case 'c':
@@ -246,6 +313,8 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                         double radius = Math.sqrt((mE.getY() - c.getCenter()[1]) * (mE.getY() - c.getCenter()[1]) + (mE.getX() - c.getCenter()[0]) * (mE.getX() - c.getCenter()[0]));
                         c.setRadius(radius);
                         painting = 0;
+                        appState = 'e';
+                        menu.setMenuOption(null);
                     }
                     break;
                 case 'r':
@@ -257,6 +326,8 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                         MyRectangle r = (MyRectangle) shapes.get(activeShape);
                         r.setSecond(mE.getX(), mE.getY());
                         painting = 0;
+                        appState = 'e';
+                        menu.setMenuOption(null);
                     }
                     break;
                 case 't':
@@ -279,6 +350,8 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                             t = (Triangle) shapes.get(activeShape);
                             t.setThird(mE.getX(), mE.getY());
                             painting = 0;
+                            appState = 'e';
+                            menu.setMenuOption(null);
                             break;
                         default:
                             break;
@@ -291,11 +364,18 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                     }else{
                         if (shapes.get(activeShape).pointIn(mE)) {
                             moving=true;
-                            movingPoint=new int[]{mE.getX(),mE.getY()};
+                            movingPoint = new int[]{mE.getX(),mE.getY()};
+                            movingVector = new int[]{0,0};
                         }
+                        if(pointInShape(mE)!=-1)
+                            activeShape = pointInShape(mE);
                     }
                     break;
                 default:
+                    activeShape = pointInShape(mE);
+                    if(pointInShape(mE)!=-1)
+                        setAppState('e');
+                    //TODO choosing as active
                     break;
             }
         }else if (SwingUtilities.isRightMouseButton(mE)){
@@ -349,12 +429,14 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                 default:
                     break;
             }
+            repaint();
         }else{
             if(appState=='e'&&moving){
                 movingVector=new int[]{mE.getX()-movingPoint[0],mE.getY()-movingPoint[1]};
+                repaint();
             }
         }
-        repaint();
+
     }
 
     @Override

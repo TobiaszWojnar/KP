@@ -4,13 +4,13 @@ Object-oriented programming course at Wroclaw University of Science and Technolo
 
 List 4 - create basic paint app
 
-Usage
+Installation
 ----
 Run Command:
-
-    `cd src
-     javac *.java`
-    
+```
+    cd src
+    javac *.java
+```
 Requirements
 ----
 * [x] implement crating figures with a mouse
@@ -36,5 +36,5 @@ What I Learned
 * using Swing
 * very painfully difference between `=+` and `+=`
 * implementing interfaces and methods 
-* using MouseListeners
+* using Listeners
 * generating doxygen documentation

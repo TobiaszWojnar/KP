@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
  * Rectangle has parameters as integer table (rect[0] = first point, rect[1] = second point, rect[2] = wight & height) and color
  * @see MyShapes extedns
  */
-public class MyRectangle extends MyShapes{
+public class MyRectangle implements MyShapes{
     private Color color;
     private final int[][] rect = new int[3][2];//rect[0] = first point; rect[1] = second point; rect[2] = wight & height
 

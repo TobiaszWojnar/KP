@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
  * Circle has center as integer table, double radius, and color.
  * @see MyShapes extedns
  */
-public class Circle extends MyShapes{
+public class Circle implements MyShapes{
     private int[] center;
     private double radius;
     Color color;

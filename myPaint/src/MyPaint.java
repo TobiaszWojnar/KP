@@ -1,5 +1,13 @@
 import javax.swing.*;
+/*
+1. Źle działa przenoszenie figur//Done? czy chodziło o to, że na początku figura mogła przeskakiwać?
+2. Ekran miga przy przesuwaniu kursora.//TODO how???
+3. Żeby figura była aktywna, to muszę zmienić kolor.//done?
+4. Wczytywanie pliku źle działa.//Done?
 
+do 20.05
+//TODO left click making active figure
+ */
 /**
  * Main class of application
  * simple graphic editor enabling to create shapes, changing their color, modifying their placement and size on canvas.
@@ -34,7 +42,6 @@ public class MyPaint extends JFrame{
 
         menu = new MyMenu(this);
         setJMenuBar(menu);
-
     }
 
     /**
@@ -43,5 +50,4 @@ public class MyPaint extends JFrame{
     public MyCanvas getCanvas() {
         return canvas;
     }
-
 }

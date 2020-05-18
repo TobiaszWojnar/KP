@@ -5,9 +5,9 @@ import java.awt.event.MouseEvent;
  * Rectangle has set of x coordinates and y coordinates of triangle's vertex as integer tables (rect[0] = x , rect[1] = y) and color
  * @see MyShapes extedns
  */
-public class Triangle extends MyShapes{
+public class Triangle implements MyShapes{
     private Color color;
-    private int[][] points = new int[2][3];//triangle[0] = X; triangle[1] = Y;
+    private final int[][] points = new int[2][3];//triangle[0] = X; triangle[1] = Y;
 
     /**
      * Constructor of triangle
@@ -126,6 +126,9 @@ public class Triangle extends MyShapes{
      */
     @Override
     public String toFile() {
-        return "T\t"+getX(0)+"\t"+getX(1)+"\t"+getX(2)+"\t"+getY(0)+"\t"+getY(1)+"\t"+getY(2)+"\t"+getColor().getRed()+"\t"+getColor().getGreen()+"\t"+getColor().getBlue()+"\n";
+        return "T\t"+
+                getX(0)+"\t"+getX(1)+"\t"+getX(2)+"\t"+
+                getY(0)+"\t"+getY(1)+"\t"+getY(2)+"\t"+
+                getColor().getRed()+"\t"+getColor().getGreen()+"\t"+getColor().getBlue()+"\n";
     }
 }

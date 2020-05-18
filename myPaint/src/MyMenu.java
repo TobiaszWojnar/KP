@@ -56,7 +56,23 @@ public class MyMenu extends JMenuBar{
                 String filePath = selectedFile.getAbsolutePath();
                 try {
                     String content = readFile(filePath);
-                    myPaint.getCanvas().shapesFromFile(content);
+                    myPaint.getCanvas().onlyShapesFromFile(content);
+                } catch (IOException ignored) {
+                }
+            }
+        });
+
+        JMenuItem mAdd = new JMenuItem ("Add from file");
+        mFile.add(mAdd);
+        mAdd.addActionListener(e -> {
+            int result = fileChooser.showOpenDialog(myPaint);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+
+                String filePath = selectedFile.getAbsolutePath();
+                try {
+                    String content = readFile(filePath);
+                    myPaint.getCanvas().addShapesFromFile(content);
                 } catch (IOException ignored) {
                 }
             }
@@ -65,14 +81,26 @@ public class MyMenu extends JMenuBar{
         mCircle = new JMenuItem ("Circle");
         mCircle.setMaximumSize(new Dimension(80, mCircle.getPreferredSize().height));
         add(mCircle);
+        mCircle.addActionListener(actionEvent -> {
+            setMenuOption(mCircle);
+            myPaint.getCanvas().setAppState('c');
+        });
 
         mRect = new JMenuItem ("Rectangle");
         mRect.setMaximumSize(new Dimension(80, mRect.getPreferredSize().height));
         add(mRect);
+        mRect.addActionListener(actionEvent -> {
+            setMenuOption(mRect);
+            myPaint.getCanvas().setAppState('r');
+        });
 
         mTriangle = new JMenuItem("Triangle");
         mTriangle.setMaximumSize(new Dimension(80, mTriangle.getPreferredSize().height));
         add(mTriangle);
+        mTriangle.addActionListener(actionEvent -> {
+            setMenuOption(mTriangle);
+            myPaint.getCanvas().setAppState('t');
+        });
 
         JMenuItem mColor = new JMenuItem ("Color");
         mColor.setMaximumSize(new Dimension(80, mColor.getPreferredSize().height));
@@ -93,7 +121,10 @@ public class MyMenu extends JMenuBar{
                          "Programing Course List 4 - create basic paint app \n"+
                          "Object oriented programing course at Wroclaw University of Science and Technology 2020    \n"+
                          "author:  Tobiasz Wojnar";
-        mInfo.addActionListener(actionEvent -> JOptionPane.showMessageDialog(myPaint, message,"Info",JOptionPane.INFORMATION_MESSAGE));
+        mInfo.addActionListener(actionEvent -> {
+            JOptionPane.showMessageDialog(myPaint, message,"Info",JOptionPane.INFORMATION_MESSAGE);
+            setMenuOption(null);
+        });
 
         JMenuItem mHelp = new JMenuItem ("Help - how to use");
         mHelp.setMaximumSize(new Dimension(160, mInfo.getPreferredSize().height));
@@ -106,19 +137,9 @@ public class MyMenu extends JMenuBar{
                 "\tBy right clicking on a shape you selected it as your active figure and a color menu will open for changing it's color.\n"+
                 "After closing menu you can scale your figure by moving mouse wheel or by left clicking inside active shape you might move it.\n"+
                 "To accept movement left click, by right clicking you will reset shape to its original location.";
-        mHelp.addActionListener(actionEvent -> JOptionPane.showMessageDialog(myPaint, message1,"Info",JOptionPane.INFORMATION_MESSAGE));
-
-        mCircle.addActionListener(actionEvent -> {
-            setMenuOption(mCircle);
-            myPaint.getCanvas().setAppState('c');
-        });
-        mRect.addActionListener(actionEvent -> {
-            setMenuOption(mRect);
-            myPaint.getCanvas().setAppState('r');
-        });
-        mTriangle.addActionListener(actionEvent -> {
-            setMenuOption(mTriangle);
-            myPaint.getCanvas().setAppState('t');
+        mHelp.addActionListener(actionEvent -> {
+            JOptionPane.showMessageDialog(myPaint, message1, "Info", JOptionPane.INFORMATION_MESSAGE);
+            setMenuOption(null);
         });
     }
 

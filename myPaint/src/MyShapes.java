@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
  * @see MyRectangle
  * @see Triangle
  */
-public abstract class MyShapes {
+public interface MyShapes {
     public abstract void setColor (Color newColor);
     public abstract Color getColor ();
     public abstract boolean pointIn(MouseEvent mE);
