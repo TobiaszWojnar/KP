@@ -1,11 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * Menu class extends JMenuBar
@@ -13,18 +8,20 @@ import java.nio.file.Paths;
  * enables saving and opening files
  */
 public class MyMenu extends JMenuBar{
-    JMenuItem mCircle;
-    JMenuItem mRect;
-    JMenuItem mTriangle;
-    JFileChooser fileChooser;
+    private final JMenuItem mCircle;
+    private final JMenuItem mRect;
+    private final JMenuItem mTriangle;
+    private final JMenuItem mColor;
+    private final JFileChooser fileChooser;
+    private Listener listener;
+    private Color previousColor;
 
     /**
      * Constructor of menu
-     * @param myPaint pointer to application
      */
-    public MyMenu(MyPaint myPaint){
-        myPaint.getCanvas().setMenu(this);
+    public MyMenu(){
         fileChooser = new JFileChooser();
+        previousColor = Color.BLACK;
 
         JMenu mFile = new JMenu("File");
         mFile.setMaximumSize(new Dimension(80, mFile.getPreferredSize().height));
@@ -35,46 +32,29 @@ public class MyMenu extends JMenuBar{
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Specify a file to save");
 
-            if (fileChooser.showSaveDialog(myPaint) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File fileToSave = fileChooser.getSelectedFile();
-                try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave.getAbsolutePath()));
-                    writer.write(myPaint.getCanvas().savingPaint());
-                    writer.close();
-                } catch (IOException ignored) {
-                }
+                listener.fileToSaveChosen(fileToSave);
             }
         });
 
         JMenuItem mOpen = new JMenuItem ("Open");
         mFile.add(mOpen);
         mOpen.addActionListener(e -> {
-            int result = fileChooser.showOpenDialog(myPaint);
+            int result = fileChooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-
-                String filePath = selectedFile.getAbsolutePath();
-                try {
-                    String content = readFile(filePath);
-                    myPaint.getCanvas().onlyShapesFromFile(content);
-                } catch (IOException ignored) {
-                }
+                listener.fileToOpenChosen(selectedFile);
             }
         });
 
         JMenuItem mAdd = new JMenuItem ("Add from file");
         mFile.add(mAdd);
         mAdd.addActionListener(e -> {
-            int result = fileChooser.showOpenDialog(myPaint);
+            int result = fileChooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-
-                String filePath = selectedFile.getAbsolutePath();
-                try {
-                    String content = readFile(filePath);
-                    myPaint.getCanvas().addShapesFromFile(content);
-                } catch (IOException ignored) {
-                }
+                listener.fileToAddChosen(selectedFile);
             }
         });
 
@@ -83,7 +63,7 @@ public class MyMenu extends JMenuBar{
         add(mCircle);
         mCircle.addActionListener(actionEvent -> {
             setMenuOption(mCircle);
-            myPaint.getCanvas().setAppState('c');
+            listener.circleSelected();
         });
 
         mRect = new JMenuItem ("Rectangle");
@@ -91,7 +71,7 @@ public class MyMenu extends JMenuBar{
         add(mRect);
         mRect.addActionListener(actionEvent -> {
             setMenuOption(mRect);
-            myPaint.getCanvas().setAppState('r');
+            listener.rectangleSelected();
         });
 
         mTriangle = new JMenuItem("Triangle");
@@ -99,18 +79,18 @@ public class MyMenu extends JMenuBar{
         add(mTriangle);
         mTriangle.addActionListener(actionEvent -> {
             setMenuOption(mTriangle);
-            myPaint.getCanvas().setAppState('t');
+            listener.triangleSelected();
         });
 
-        JMenuItem mColor = new JMenuItem ("Color");
+        mColor = new JMenuItem ("Color");
         mColor.setMaximumSize(new Dimension(80, mColor.getPreferredSize().height));
-        mColor.setBackground(myPaint.getCanvas().getColor());
         add(mColor);
+        mColor.setBackground(previousColor);
         mColor.addActionListener(e -> {
-            Color temp=JColorChooser.showDialog(myPaint, "", myPaint.getCanvas().getColor());
+            Color temp=JColorChooser.showDialog(this, "Color Chooser", previousColor);
             if(temp!=null) {
-                myPaint.getCanvas().setColor(temp);
-                mColor.setBackground(myPaint.getCanvas().getColor());
+                listener.colorChosen(temp);
+                mColor.setBackground(temp);
             }
         });
 
@@ -122,7 +102,7 @@ public class MyMenu extends JMenuBar{
                          "Object oriented programing course at Wroclaw University of Science and Technology 2020    \n"+
                          "author:  Tobiasz Wojnar";
         mInfo.addActionListener(actionEvent -> {
-            JOptionPane.showMessageDialog(myPaint, message,"Info",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, message,"Info",JOptionPane.INFORMATION_MESSAGE);
             setMenuOption(null);
         });
 
@@ -138,9 +118,12 @@ public class MyMenu extends JMenuBar{
                 "After closing menu you can scale your figure by moving mouse wheel or by left clicking inside active shape you might move it.\n"+
                 "To accept movement left click, by right clicking you will reset shape to its original location.";
         mHelp.addActionListener(actionEvent -> {
-            JOptionPane.showMessageDialog(myPaint, message1, "Info", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, message1, "Info", JOptionPane.INFORMATION_MESSAGE);
             setMenuOption(null);
         });
+    }
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -154,14 +137,18 @@ public class MyMenu extends JMenuBar{
         if(mItem!=null)
             mItem.setEnabled(false);
     }
+    public void setChooseColorOptionBackgroundColor(Color color){
+        previousColor=color;
+        mColor.setBackground(color);
+    }
 
-    /**
-     * Reads form file
-     * @param path path to file
-     * @return file content
-     * @throws IOException if file is missing
-     */
-    public static String readFile(String path) throws IOException {
-        return Files.readString(Paths.get(path));
+    public interface Listener {
+        void fileToSaveChosen (File file);
+        void fileToOpenChosen (File file);
+        void fileToAddChosen (File file);
+        void circleSelected ();
+        void rectangleSelected ();
+        void triangleSelected ();
+        void colorChosen (Color color);
     }
 }

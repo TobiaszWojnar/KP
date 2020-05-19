@@ -1,11 +1,10 @@
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
 /**
  * Rectangle has set of x coordinates and y coordinates of triangle's vertex as integer tables (rect[0] = x , rect[1] = y) and color
- * @see MyShapes extedns
+ * @see MyShape extedns
  */
-public class Triangle implements MyShapes{
+public class Triangle implements MyShape {
     private Color color;
     private final int[][] points = new int[2][3];//triangle[0] = X; triangle[1] = Y;
 
@@ -86,28 +85,28 @@ public class Triangle implements MyShapes{
     }
 
     /**
-     * @param mE point to be checked
+     * @param point (int[2])point to be checked
      * @return if point is inside triangle
      */
     @Override
-    public boolean pointIn(MouseEvent mE) {
+    public boolean pointIn(int[] point) {
         Polygon p = new Polygon(getX(),getY(),3);
-        return p.contains(mE.getX(),mE.getY());
+        return p.contains(point[0],point[1]);
     }
 
     /**
      * Moves triangle by vector point>mE
-     * @param point form which triangle moved
-     * @param mE point to which triangle moved
+     * @param initialPoint point form which triangle moved
+     * @param finalPoint point to which triangle moved
      */
     @Override
-    public void move(int[] point, MouseEvent mE) {
-        points[0][0]+=mE.getX()-point[0];
-        points[0][1]+=mE.getX()-point[0];
-        points[0][2]+=mE.getX()-point[0];
-        points[1][0]+=mE.getY()-point[1];
-        points[1][1]+=mE.getY()-point[1];
-        points[1][2]+=mE.getY()-point[1];
+    public void move(int[] initialPoint, int[] finalPoint) {
+        points[0][0]+=finalPoint[0]-initialPoint[0];
+        points[0][1]+=finalPoint[0]-initialPoint[0];
+        points[0][2]+=finalPoint[0]-initialPoint[0];
+        points[1][0]+=finalPoint[1]-initialPoint[1];
+        points[1][1]+=finalPoint[1]-initialPoint[1];
+        points[1][2]+=finalPoint[1]-initialPoint[1];
     }
 
     /**
@@ -130,5 +129,10 @@ public class Triangle implements MyShapes{
                 getX(0)+"\t"+getX(1)+"\t"+getX(2)+"\t"+
                 getY(0)+"\t"+getY(1)+"\t"+getY(2)+"\t"+
                 getColor().getRed()+"\t"+getColor().getGreen()+"\t"+getColor().getBlue()+"\n";
+    }
+
+    @Override
+    public void accept(PainterVisitor visitor) {
+        visitor.paint(this);
     }
 }

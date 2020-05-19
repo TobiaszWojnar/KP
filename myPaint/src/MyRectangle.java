@@ -1,11 +1,10 @@
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
 /**
  * Rectangle has parameters as integer table (rect[0] = first point, rect[1] = second point, rect[2] = wight & height) and color
- * @see MyShapes extedns
+ * @see MyShape extedns
  */
-public class MyRectangle implements MyShapes{
+public class MyRectangle implements MyShape {
     private Color color;
     private final int[][] rect = new int[3][2];//rect[0] = first point; rect[1] = second point; rect[2] = wight & height
 
@@ -65,30 +64,30 @@ public class MyRectangle implements MyShapes{
     }
 
     /**
-     * @param mE point to be checked
+     * @param point to be checked
      * @return if point is inside rectangle
      */
     @Override
-    public boolean pointIn(MouseEvent mE) {
-        int[] upperLeft = new int[] {Math.min(rect[0][0],rect[1][0]),Math.min(rect[0][1],rect[1][1])};//TODO pole upper left?
+    public boolean pointIn(int[] point) {
+        int[] upperLeft = new int[] {Math.min(rect[0][0],rect[1][0]),Math.min(rect[0][1],rect[1][1])};
         int[] lowerRight = new int[] {Math.max(rect[0][0],rect[1][0]),Math.max(rect[0][1],rect[1][1])};
-        if(mE.getX()>=upperLeft[0]&&mE.getX()<=lowerRight[0]){
-            return mE.getY() >= upperLeft[1] && mE.getY() <= lowerRight[1];
+        if(point[0]>=upperLeft[0]&&point[0]<=lowerRight[0]){
+            return point[1] >= upperLeft[1] && point[1] <= lowerRight[1];
         }
         return false;
     }
 
     /**
      * Moves rectangle by vector point>mE
-     * @param point form which  rectangle moved
-     * @param mE point to which rectangle moved
+     * @param initialPoint point form which rectangle moved
+     * @param finalPoint point to which rectangle moved
      */
     @Override
-    public void move(int[] point, MouseEvent mE) {
-        rect[0][0]+=mE.getX()-point[0];
-        rect[0][1]+=mE.getY()-point[1];
-        rect[1][0]+=mE.getX()-point[0];
-        rect[1][1]+=mE.getY()-point[1];
+    public void move(int[] initialPoint, int[] finalPoint) {
+        rect[0][0]+=finalPoint[0]-initialPoint[0];
+        rect[0][1]+=finalPoint[1]-initialPoint[1];
+        rect[1][0]+=finalPoint[0]-initialPoint[0];
+        rect[1][1]+=finalPoint[1]-initialPoint[1];
     }
 
     /**
@@ -106,7 +105,14 @@ public class MyRectangle implements MyShapes{
      */
     @Override
     public String toFile() {
-        return "R\t"+getRect()[0][0]+"\t"+getRect()[0][1]+"\t"+getRect()[1][0]+"\t"+getRect()[1][1]+"\t"+getColor().getRed()+"\t"+getColor().getGreen()+"\t"+getColor().getBlue()+"\n";
+        return "R\t" +
+                getRect()[0][0]+"\t"+getRect()[0][1]+"\t"+
+                getRect()[1][0]+"\t"+getRect()[1][1]+"\t"+
+                getColor().getRed()+"\t"+getColor().getGreen()+"\t"+getColor().getBlue()+"\n";
     }
 
+    @Override
+    public void accept(PainterVisitor visitor) {
+        visitor.paint(this);
+    }
 }
