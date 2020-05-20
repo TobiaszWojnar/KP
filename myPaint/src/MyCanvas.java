@@ -4,24 +4,21 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 /**
- * Menu class extends Canvas and implements listeners for mouse movement
+ * MyCanvas class extends Canvas and implements listeners for mouse movement
  * Contains all shapes and state of program
  */
 public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListener, MouseWheelListener {
-
     private ArrayList<MyShape> shapes;
     private Color activeColor = Color.BLACK;
-    private char appState;
+    enum States {c,r,t,e,no}
+    States appState;
     private int painting;
     private int activeShape;
     private boolean moving;
-    private int[] movingPoint;
-    private int[] movingVector;
-    double rescaleFactor;
+    private Point movingPoint;
+    private final Point movingVector;
+    private final double rescaleFactor;
     private Listener listener;
-    PainterNormal paintNormal;
-    PainterActive paintActive;
-    PainterMoving paintMoving;
 
     /**
      * Constructor of canvas
@@ -30,7 +27,7 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
      * appState 'c' >   creating circle
      *          'r' >   creating rectangle
      *          't' >   creating triangle
-     *          '0' >   no action
+     *          'no' >   no action
      *          'e' > editing active figure
      * shapes   - list of all shapes
      * activeShape - index of active shape
@@ -45,56 +42,85 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
         addMouseMotionListener(this);
         addMouseWheelListener(this);
 
-        appState = '0';
+        appState = States.no;
         shapes = new ArrayList<>();
         activeShape=0;
         painting = 0;
         moving = false;
-        movingPoint=new int[2];
-        movingVector=new int[2];
+        movingPoint=new Point();
+        movingVector=new Point();
         rescaleFactor=.95;
-        paintShit();
-        //paintSth();
+        paintSth();
     }
-
     /**
      * Paints all figures from shapes
+     * Iterates for all items in shapes
+     * For active figure uses paintActive, for rest  paintNormal
+     * @param g paints on it
+     * @see PainterActive
+     * @see PainterNormal
+     * @see MyShape
+     * @see PainterVisitor
      */
     public void paint(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
-        paintNormal = new PainterNormal(g2d);
-        paintActive = new PainterActive(g2d);
-        paintMoving = new PainterMoving(g2d,movingVector);
-
-        for(MyShape s:shapes){
+        PainterNormal paintNormal = new PainterNormal(g2d);
+        PainterActive paintActive = new PainterActive(g2d);
+        PainterActive paintMoving = new PainterActive(g2d,movingVector);
+        for(int i=0; i<shapes.size();i++){
+            MyShape s=shapes.get(i);
             g2d.setColor(s.getColor());
-            if(shapes.indexOf(s)==activeShape){
+            if(i==activeShape){
                 if(moving){
                     s.accept(paintMoving);
                 }else {
                     s.accept(paintActive);
                 }
             }else {
-                s.accept(paintNormal);//https://www.geeksforgeeks.org/visitor-design-pattern/ //TODO
+                s.accept(paintNormal);
             }
         }
     }
 
     /**
+     * @param mE Point where mouse is
      * @return index of figure in which we clicked or -1 if no such figure existed
+     * @see MyShape
      */
     private int pointInShape(MouseEvent mE){
         for (int i=shapes.size()-1;i>=0;i--){
-            if(shapes.get(i).pointIn(new int[]{mE.getX(),mE.getY()}))
+            if(shapes.get(i).pointIn(mE.getX(),mE.getY()))
                 return i;
         }
         return -1;
     }
 
-    public ArrayList<MyShape> getShapes() {
-        return shapes;
+    /**
+     * @return list of shapes
+     * @see MyShape
+     */
+    public ArrayList<MyShape> getShapes() { return shapes; }
+
+    /**
+     * adds list of new shapes to existing list
+     * @param newShapes list of MyShapes
+     * @see MyShape
+     */
+    public void addShapes(ArrayList<MyShape> newShapes) {
+        shapes.addAll(newShapes);
     }
 
+    /**
+     * clears list of shapes
+     * @see MyShape
+     */
+    public void clearShapes() {
+        shapes.clear();
+    }
+
+    /**
+     * @param shapes sets shapes as this shapes
+     */
     public void setShapes(ArrayList<MyShape> shapes) {
         this.shapes = shapes;
     }
@@ -106,14 +132,15 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
      * 't' >    creating triangle
      * '0' >    no action
      * 'e' >    editing active figure
+     * @see MyCanvas.States
      */
-    public void setAppState(char newAppState) {
+    public void setAppState(States newAppState) {
         if(painting!=0) {
             shapes.remove(shapes.size() - 1);
             painting=0;
         }
         appState = newAppState;
-        if(appState!='e')
+        if(appState!=States.e)
             activeShape =-1;
         repaint();
     }
@@ -132,12 +159,15 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
         this.activeColor=activeColor;
     }
 
+    /**
+     * @param listener sets listener
+     */
     public void setListener(Listener listener) {
         this.listener = listener;
     }
 
     /**
-     * listener for mouse clicked
+     * listener for mouse being clicked
      * if crating figures
      *      left clicks adds points
      *      right click stops action
@@ -153,34 +183,34 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
     public void mouseClicked(MouseEvent mE) {
         if(SwingUtilities.isLeftMouseButton(mE)){
             switch (appState){
-                case 'c':
+                case c:
                     if(painting==0) {
-                        shapes.add(new Circle(new int[]{mE.getX(), mE.getY()}, 0, activeColor));
+                        shapes.add(new Circle(mE.getPoint(), 0, activeColor));
                         activeShape = shapes.size()-1;
                         painting = 1;
                     }else{
                         Circle c = (Circle) shapes.get(activeShape);
-                        double radius = Math.sqrt((mE.getY() - c.getCenter()[1]) * (mE.getY() - c.getCenter()[1]) + (mE.getX() - c.getCenter()[0]) * (mE.getX() - c.getCenter()[0]));
+                        double radius = c.getCenter().distance(mE.getPoint());
                         c.setRadius(radius);
                         painting = 0;
-                        appState = 'e';
+                        appState = States.e;
                         listener.onShapeFinished();
                     }
                     break;
-                case 'r':
+                case r:
                     if(painting==0) {
-                        shapes.add(new MyRectangle(new int[]{mE.getX(), mE.getY()}, new int[]{mE.getX(), mE.getY()}, activeColor));
+                        shapes.add(new MyRectangle(mE.getPoint(), mE.getPoint(), activeColor));
                         activeShape = shapes.size()-1;
                         painting = 1;
                     }else{
                         MyRectangle r = (MyRectangle) shapes.get(activeShape);
                         r.setSecond(mE.getX(), mE.getY());
                         painting = 0;
-                        appState = 'e';
+                        appState = States.e;
                         listener.onShapeFinished();
                     }
                     break;
-                case 't':
+                case t:
                     int[][] points = new int[2][3];
                     Triangle t;
                     switch (painting){
@@ -200,22 +230,23 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                             t = (Triangle) shapes.get(activeShape);
                             t.setThird(mE.getX(), mE.getY());
                             painting = 0;
-                            appState = 'e';
+                            appState = States.e;
                             listener.onShapeFinished();
                             break;
                         default:
                             break;
                     }
                     break;
-                case 'e':
+                case e:
                     if(moving) {
-                        shapes.get(activeShape).move(movingPoint, new int[]{mE.getX(),mE.getY()});
+                        shapes.get(activeShape).move(mE.getX()-movingPoint.x,mE.getY()-movingPoint.y);
+                        movingPoint.setLocation(0,0);
                         moving = false;
                     }else{
-                        if (shapes.get(activeShape).pointIn(new int[]{mE.getX(),mE.getY()})) {
+                        if (shapes.get(activeShape).pointIn(mE.getX(),mE.getY())) {
                             moving=true;
-                            movingPoint = new int[]{mE.getX(),mE.getY()};
-                            movingVector = new int[]{0,0};
+                            movingPoint = mE.getPoint();
+                            movingVector.setLocation(0,0);
                         }
                         if(pointInShape(mE)!=-1)
                             activeShape = pointInShape(mE);
@@ -224,30 +255,33 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
                 default:
                     activeShape = pointInShape(mE);
                     if(activeShape!=-1) {
-                        System.out.println("little fucker; "+ activeShape+"\n"+moving+"\n"+movingVector[0]+"\n"+movingPoint[0]);
-                        setAppState('e');
+                        setAppState(States.e);
                     }
                     break;
             }
         }else if (SwingUtilities.isRightMouseButton(mE)){
             if(painting!=0) {
                 shapes.remove(shapes.size() - 1);
+                repaint();
                 painting=0;
                 listener.onShapeFinished();
             }
             if(moving){
-                System.out.println("need to decide what to do");//TODO if(moving)
-            }
-            activeShape = pointInShape(mE);
-            if(activeShape==-1) {
-                setAppState('0');
-            } else{
-                Color temp=JColorChooser.showDialog(this, "", shapes.get(activeShape).getColor());
-                if(temp!=null) {
-                    shapes.get(activeShape).setColor(temp);
-                    listener.onColorChanged(temp);
+                repaint();
+                moving = false;
+                movingPoint.setLocation(0,0);
+            }else {
+                activeShape = pointInShape(mE);
+                if (activeShape == -1) {
+                    setAppState(States.no);
+                } else {
+                    Color temp = JColorChooser.showDialog(this, "", shapes.get(activeShape).getColor());
+                    if (temp != null) {
+                        shapes.get(activeShape).setColor(temp);
+                        listener.onColorChanged(temp);
+                    }
+                    setAppState(States.e);
                 }
-                setAppState('e');
             }
         }
         repaint();
@@ -262,16 +296,16 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
     public void mouseMoved(MouseEvent mE) {
         if(painting>0){
             switch (appState) {
-                case 'c':
+                case c:
                     Circle c = (Circle) shapes.get(shapes.size() - 1);
-                    double radius = Math.sqrt((mE.getY() - c.getCenter()[1]) * (mE.getY() - c.getCenter()[1]) + (mE.getX() - c.getCenter()[0]) * (mE.getX() - c.getCenter()[0]));
+                    double radius = c.getCenter().distance(mE.getPoint());
                     c.setRadius(radius);
                     break;
-                case 'r':
+                case r:
                     MyRectangle r = (MyRectangle) shapes.get(shapes.size() - 1);
                     r.setSecond(mE.getX(), mE.getY());
                     break;
-                case 't':
+                case t:
                     Triangle t;
                     if(painting==1){
                         t = (Triangle) shapes.get(activeShape);
@@ -286,8 +320,8 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
             }
             repaint();
         }else{
-            if(appState=='e'&&moving){
-                movingVector=new int[]{mE.getX()-movingPoint[0],mE.getY()-movingPoint[1]};
+            if(appState==States.e&&moving){
+                movingVector.setLocation(mE.getX()-movingPoint.x,mE.getY()-movingPoint.y);
                 repaint();
             }
         }
@@ -316,38 +350,32 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
     @Override
     public void mouseWheelMoved(MouseWheelEvent mWE) {
         double factor=rescaleFactor;
-        if(appState=='e') {
+        if(appState==States.e) {
             if (mWE.getWheelRotation() < 0)
                 factor = 1 / factor;
             shapes.get(activeShape).resize(factor);
             repaint();
         }
     }
-    /*
+
+    /**
+     * method for testing loads starting shapes
+     */
     public void paintSth (){
-        Circle c1 = new Circle(new int[] {12,14},40,Color.CYAN);
-        Circle c2 = new Circle(new int[] {200,214},30,Color.RED);
-        shapes.add(c1);
-        shapes.add(c2);
-        MyRectangle r1 = new MyRectangle(new int[] {20,40},new int[] {40,60},Color.YELLOW);
-        shapes.add(r1);
-        Triangle t1 = new Triangle(new int[] {64,64,128}, new int[] {64,128,128}, Color.MAGENTA);
-        shapes.add(t1);
-        activeShape=+4;
-    }
-*/
-    public void paintShit (){
         Circle c;
         activeShape=-1;
-        for(int j=0;j<5;j++) {
-            for (int i = 0; i < 20; i++) {
-                c = new Circle(new int[]{30 + i * 40, 50+j*60}, 20, new Color(i * 5+j*10, i * 10+j*10, i * 10+j*10));
+        for(int j=0;j<4;j++) {
+            for (int i = 0; i < 8; i++) {
+                c = new Circle(new Point(40 + i * 80, 60+j*100), 25, new Color(i * 10+j*30, i * 20+j*20, i * 30+j*10));
                 shapes.add(c);
             }
         }
-
-
     }
+
+    /**
+     * Listener enabling to change menu state
+     * @see MyMenu
+     */
     public interface Listener {
         void onShapeFinished ();
         void onColorChanged(Color color);

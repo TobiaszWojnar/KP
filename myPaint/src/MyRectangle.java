@@ -1,23 +1,28 @@
 import java.awt.*;
 
 /**
- * Rectangle has parameters as integer table (rect[0] = first point, rect[1] = second point, rect[2] = wight & height) and color
+ * Rectangle has parameters:
+ *      * first and second Point
+ *      * height and wight
  * @see MyShape extedns
  */
 public class MyRectangle implements MyShape {
     private Color color;
-    private final int[][] rect = new int[3][2];//rect[0] = first point; rect[1] = second point; rect[2] = wight & height
-
+    private final Point first;
+    private Point second;
+    private int height;
+    private int weight;
     /**
      * Constructor of rectangle
-     * @param first point
-     * @param second point
-     * @param color  of rectangle
+     * @param firstPoint point
+     * @param secondPoint point
+     * @param color of rectangle
+     * constructor calculates height and weight
      */
-    MyRectangle(int[] first, int[] second, Color color) {
+    MyRectangle(Point firstPoint, Point secondPoint, Color color) {
         this.color=color;
-        rect[0]=first;
-        rect[1]=second;
+        this.first=firstPoint;
+        second=secondPoint;
         setDimension();
     }
 
@@ -27,24 +32,33 @@ public class MyRectangle implements MyShape {
      * @param y coordinate
      */
     public void setSecond (int x, int y){
-        rect[1][0]=x;
-        rect[1][1]=y;
+        second=new Point(x,y);
         setDimension();
     }
 
     /**
+     * @return height of rectangle
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+    /**
      * updates dimensions of rectangle
      */
     public void setDimension(){
-        rect[2][0]=Math.abs(rect[0][0]-rect[1][0]);
-        rect[2][1]=Math.abs(rect[0][1]-rect[1][1]);
+        weight=Math.abs(first.x-second.x);
+        height=Math.abs(first.y-second.y);
     }
 
     /**
-     * @return points and dimensions of rectangle
+     * @return upper left vertex of rectangle
      */
-    public int[][] getRect(){
-        return rect;
+    public Point getUpperLeft(){
+        return new Point(Math.min(first.x,second.x),Math.min(first.y,second.y));
     }
 
     /**
@@ -64,53 +78,57 @@ public class MyRectangle implements MyShape {
     }
 
     /**
-     * @param point to be checked
+     * @param x,y to be checked
      * @return if point is inside rectangle
      */
     @Override
-    public boolean pointIn(int[] point) {
-        int[] upperLeft = new int[] {Math.min(rect[0][0],rect[1][0]),Math.min(rect[0][1],rect[1][1])};
-        int[] lowerRight = new int[] {Math.max(rect[0][0],rect[1][0]),Math.max(rect[0][1],rect[1][1])};
-        if(point[0]>=upperLeft[0]&&point[0]<=lowerRight[0]){
-            return point[1] >= upperLeft[1] && point[1] <= lowerRight[1];
+    public boolean pointIn(int x, int y) {
+        if(x>= getUpperLeft().x&&x<= getUpperLeft().y+weight){
+            return y >= getUpperLeft().x && y <= getUpperLeft().y+height;
         }
         return false;
     }
-
     /**
      * Moves rectangle by vector point>mE
-     * @param initialPoint point form which rectangle moved
-     * @param finalPoint point to which rectangle moved
+     * @param xDistance point form which rectangle moved
+     * @param yDistance point to which rectangle moved
      */
     @Override
-    public void move(int[] initialPoint, int[] finalPoint) {
-        rect[0][0]+=finalPoint[0]-initialPoint[0];
-        rect[0][1]+=finalPoint[1]-initialPoint[1];
-        rect[1][0]+=finalPoint[0]-initialPoint[0];
-        rect[1][1]+=finalPoint[1]-initialPoint[1];
+    public void move(int xDistance, int yDistance) {
+        first.x+=xDistance;
+        first.y+=yDistance;
+        second.x+=xDistance;
+        second.y+=yDistance;
     }
 
     /**
-     *
      * @param factor by which rectangle dimension is resized
      */
     @Override
     public void resize(double factor) {
-        rect[1][0]+= (rect[0][0]-rect[1][0])*(1-factor);
-        rect[1][1]+= (rect[0][1]-rect[1][1])*(1-factor);
+        second.x+= (first.x-second.x)*(1-factor);
+        second.y+= (first.y-second.y)*(1-factor);
         setDimension();
     }
     /**
-     * @return Rectangle parameters
+     * Method enabling saving to document
+     * @return Parameters of figure concatenated into string.
+     * Format for returning:
+     *      * Upper case letter for determining what type of figure is it ('R')
+     *      * x,y coordinates of first point, x,y coordinate of second point
+     *      * Color as 3 integers for RGB (0-255)
      */
     @Override
     public String toFile() {
         return "R\t" +
-                getRect()[0][0]+"\t"+getRect()[0][1]+"\t"+
-                getRect()[1][0]+"\t"+getRect()[1][1]+"\t"+
+                first.x+"\t"+first.y+"\t"+
+                second.x+"\t"+second.y+"\t"+
                 getColor().getRed()+"\t"+getColor().getGreen()+"\t"+getColor().getBlue()+"\n";
     }
 
+    /**
+     * @param visitor painter visitor
+     */
     @Override
     public void accept(PainterVisitor visitor) {
         visitor.paint(this);

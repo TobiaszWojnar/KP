@@ -10,6 +10,7 @@ Run Command:
 ```
     cd src
     javac *.java
+    java MyPaint
 ```
 Requirements
 ----
@@ -37,4 +38,6 @@ What I Learned
 * very painfully difference between `=+` and `+=`
 * implementing interfaces and methods 
 * using Listeners
+* using VisitorPattern
+* why packages are important
 * generating doxygen documentation

@@ -5,27 +5,26 @@ import java.awt.*;
  * @see MyShape extedns
  */
 public class Circle implements MyShape {
-    private final int[] center;
+    private final Point center;
     private double radius;
-    Color color;
+    private Color color;
     /**
      * Circle has
-     * @param points center as integer table
+     * @param point center
      * @param radius double
      * @param color color
      */
-    Circle(int[] points, double radius, Color color) {
-        center = new int[2];
-        center[0]=points[0];
-        center[1]=points[1];
+    Circle(Point point, double radius, Color color) {
+        center = point;
         this.radius = radius;
         this.color = color;
     }
 
     /**
-     * @return centre of circle as integer table
+     * @return centre of circle as Point
+     * @see Point
      */
-    public int[] getCenter() {
+    public Point getCenter() {
         return center;
     }
     /**
@@ -52,7 +51,7 @@ public class Circle implements MyShape {
     }
 
     /**
-     * @return returns circle color
+     * @return returns color of circle
      */
     @Override
     public Color getColor() {
@@ -60,24 +59,27 @@ public class Circle implements MyShape {
     }
 
     /**
-     * @param point to be checked
-     * @return if point is inside circle
+     * checks if point [x,y] is in figure
+     * @param x coordinate of point
+     * @param y coordinate of point
+     * @return true if circle contains point
+     * if distance between point and circle centre is smaller or equal to radius
      */
     @Override
-    public boolean pointIn(int[] point) {
-        int distance = (int)Math.sqrt((point[1] - center[1]) * (point[1] - center[1]) + (point[0] - center[0]) * (point[0] - center[0]));
+    public boolean pointIn(int x, int y) {
+        double distance = center.distance(x,y);
         return distance <= radius;
     }
 
     /**
-     * Moves circle by vector point>mE
-     * @param initialPoint form which we move circle
-     * @param finalPoint point to which we move circle
+     * moves circle centre by vector [xDistance,yDistance]
+     * @param xDistance x coordinate of vector
+     * @param yDistance y coordinate of vector
      */
     @Override
-    public void move(int[] initialPoint, int[] finalPoint) {
-        center[0]+=finalPoint[0]-initialPoint[0];
-        center[1]+=finalPoint[1]-initialPoint[1];
+    public void move(int xDistance, int yDistance) {
+        center.x+=xDistance;
+        center.y+=yDistance;
     }
 
     /**
@@ -89,18 +91,27 @@ public class Circle implements MyShape {
     }
 
     /**
-     * @return Circle parameters
+     * Method enabling saving to document
+     * @return Parameters of figure concatenated into string.
+     * Format for returning:
+     *      * Upper case letter for determining what type of figure is it ('C')
+     *      * x coordinate of centre, y coordinate of centre, radius
+     *      * Color as 3 integers for RGB (0-255)
      */
     @Override
     public String toFile() {
         return "C\t"+
-        getCenter()[0]+"\t"+getCenter()[1]+"\t"+
+        center.x+"\t"+center.y+"\t"+
         getRadius()+"\t"+
         getColor().getRed()+"\t"+getColor().getGreen()+"\t"+getColor().getBlue()+"\n";
     }
 
+    /**
+     * @param visitor painter visitor
+     */
     @Override
     public void accept(PainterVisitor visitor) {
         visitor.paint(this);
     }
+
 }

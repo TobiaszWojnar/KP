@@ -85,28 +85,27 @@ public class Triangle implements MyShape {
     }
 
     /**
-     * @param point (int[2])point to be checked
+     * @param x,y (int[2])point to be checked
      * @return if point is inside triangle
      */
     @Override
-    public boolean pointIn(int[] point) {
+    public boolean pointIn(int x, int y) {
         Polygon p = new Polygon(getX(),getY(),3);
-        return p.contains(point[0],point[1]);
+        return p.contains(x,y);
     }
-
     /**
-     * Moves triangle by vector point>mE
-     * @param initialPoint point form which triangle moved
-     * @param finalPoint point to which triangle moved
+     * Moves triangle by vector [xDistance,yDistance]
+     * @param xDistance point form which triangle moved
+     * @param yDistance point to which triangle moved
      */
     @Override
-    public void move(int[] initialPoint, int[] finalPoint) {
-        points[0][0]+=finalPoint[0]-initialPoint[0];
-        points[0][1]+=finalPoint[0]-initialPoint[0];
-        points[0][2]+=finalPoint[0]-initialPoint[0];
-        points[1][0]+=finalPoint[1]-initialPoint[1];
-        points[1][1]+=finalPoint[1]-initialPoint[1];
-        points[1][2]+=finalPoint[1]-initialPoint[1];
+    public void move(int xDistance, int yDistance) {
+        points[0][0]+=xDistance;
+        points[0][1]+=xDistance;
+        points[0][2]+=xDistance;
+        points[1][0]+=yDistance;
+        points[1][1]+=yDistance;
+        points[1][2]+=yDistance;
     }
 
     /**
@@ -121,7 +120,12 @@ public class Triangle implements MyShape {
     }
 
     /**
-     * @return triangle parameters
+     * Method enabling saving to document
+     * @return Parameters of figure concatenated into string.
+     * Format for returning:
+     *      * Upper case letter for determining what type of figure is it ('T')
+     *      * x coordinate of vertexes, y coordinate of vertexes
+     *      * Color as 3 integers for RGB (0-255)
      */
     @Override
     public String toFile() {
@@ -130,7 +134,9 @@ public class Triangle implements MyShape {
                 getY(0)+"\t"+getY(1)+"\t"+getY(2)+"\t"+
                 getColor().getRed()+"\t"+getColor().getGreen()+"\t"+getColor().getBlue()+"\n";
     }
-
+    /**
+     * @param visitor painter visitor
+     */
     @Override
     public void accept(PainterVisitor visitor) {
         visitor.paint(this);
