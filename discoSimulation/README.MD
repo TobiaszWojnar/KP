@@ -33,15 +33,16 @@ Time `t` is random number of milliseconds in range [0.5k, 1.5k].
     * take care of synchronization to avoid conflicts
 * [x] for 5.0
     * add ability to stop each thread by clicking on rectangle
+    * after being clicked does not take part in calculating average color of its neighbours
 
 * [x] add rescaling application
-* [ ] generate documentation with `javadoc` and `doxygen`
-
-Wskazówki:
-Zobacz opis klasy generuj¡cej liczby pseudolosowe java.util.Random i u»yj metod double
-nextDouble() i int nextInt(int n) - generator pseudolosowy powinien by¢ tylko jeden w
-caaej aplikacji.
+* [x] generate documentation with `javadoc` and `doxygen`
+* [x] use only one pseudorandom generator
 
 What I Learned
 ----
-* 
+* using labels and textFields in swing
+* using threads
+* stopping and restarting threads
+* making better javadoc
+* first used a ternary operator `a ? b : c`
