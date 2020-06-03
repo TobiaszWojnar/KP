@@ -1,6 +1,6 @@
 public class GenericNode <T extends Comparable<T>> {
-    T key;
-    GenericNode<T> left, right;
+    public T key;
+    public GenericNode<T> left, right;
 
     public GenericNode(T item) {
         key = item;
@@ -32,27 +32,21 @@ public class GenericNode <T extends Comparable<T>> {
             return right.search(value);
         return null;
     }
-    public GenericNode<T> delete(GenericNode<T> root, T value) {
-        /* Base Case: If the tree is empty */
-        if (root == null)
-            return null;
-        /* Otherwise, recur down the tree */
-        if (value.compareTo(root.key)<0)
-            root.left = delete(root.left, value);
-        else if (value.compareTo(root.key)>0) {
-            root.right = delete(root.right, value);
-        }else { // if key is same as root's key, then This is the node to be deleted
-            // node with only one child or no child
-            if (root.left == null)
-                return root.right;
-            else if (root.right == null)
-                return root.left;
-            // node with two children: Get the inorder successor (smallest in the right subtree)
-            root.key = minValue(root.right);
-            // Delete the inorder successor
-            root.right = delete(root.right, root.key);
+    public GenericNode<T> delete(T value) {//TODO empty things
+        if (value.compareTo(key) < 0 && left!=null)
+            left = left.delete(value);//TODO does it work when no left?
+        else if (value.compareTo(key) > 0 && right!=null) {
+            right = right.delete(value);
+        } else { //value == key
+            if (left == null)
+                return right;
+            else if (right == null)
+                return left;
+            //node has two children: get successor and delete it in right sub tree
+            key = minValue(right);
+            right = right.delete(key);
         }
-        return root;
+        return this;
     }
     private T minValue(GenericNode<T> root) {
         T minv = root.key;

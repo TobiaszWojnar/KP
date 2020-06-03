@@ -2,7 +2,9 @@ import javax.swing.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {//TODO make separate main for server
+        //TODO only server know type it returns string
+        //TODO make serializator na serwerze
         testInt();
         //testDouble();
         //testString();
@@ -23,8 +25,8 @@ public class Main {
         treeInt.delete(80);
         System.out.println("Inorder traversal of the modified tree");
         treeInt.draw();
-        System.out.println(treeInt.search(30).right.key);
-
+        treeInt.delete(30);//TODO does not delete root
+        treeInt.draw();
         SwingUtilities.invokeLater(() -> new TreeGUI(treeInt));
     }
     public static void testDouble(){

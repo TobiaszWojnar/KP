@@ -29,8 +29,10 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
      *          't' >   creating triangle
      *          'no' >   no action
      *          'e' > editing active figure
+     *
      * shapes   - list of all shapes
      * activeShape - index of active shape
+     *
      * painting: equals '0' when no new points have been painted
      *           equals '1' when 1 point of new figure has been painted
      *           equals '2' when 1 point of new figure has been painted (only for triangle)
@@ -50,7 +52,7 @@ public class MyCanvas extends Canvas  implements MouseListener, MouseMotionListe
         movingPoint=new Point();
         movingVector=new Point();
         rescaleFactor=.95;
-        paintSth();
+        //paintSth();
     }
     /**
      * Paints all figures from shapes

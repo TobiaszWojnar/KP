@@ -1,18 +1,50 @@
 import javax.swing.*;
 import java.awt.*;
 
+
 public class TreeGUI extends JFrame {
-    TreeContainer treeContainer;
+    TreePainter treePainter;
     GenericBinaryTree tree;
+    MyClient client;
+
     public TreeGUI(GenericBinaryTree ntree) {
+        //client=new MyClient();
+
         this.tree=ntree;
         JPanel container = new JPanel();
         add(container);
+//ma mieć clienta
+        treePainter = new TreePainter(tree.root);
+        container.add(treePainter);
 
-        treeContainer = new TreeContainer(tree.root);
-        container.add(treeContainer);
+        SidePanel sidePanel = new SidePanel();
+        sidePanel.setListener(new SidePanel.Listener() {
+            @Override
+            public void typeChosen(String type) {
+                tree.draw();//TODO jeśli brak zmian to serwer nic nie wysyła
+            }//TODO if changes delete tree and make new
+            @Override
+            public void elementToInsertChosen(String element) {
+                tree.insert(element);//TODO where to cast //cast on server
+                tree.draw();
+                //client.insert(element);
+            }
+            @Override
+            public void elementToDeleteChosen(String element) {
+                //tree.delete(tree.root,element);//TODO where to cast
+                tree.draw();
+            }
+            @Override
+            public void elementToSearchChosen(String element) {//TODO popup?//Paint different color
+                tree.search(element);//TODO where to cast
+                tree.draw();
+            }
+            @Override
+            public void drawChosen() {tree.draw();}
+        });
 
-        SidePanel sidePanel = new SidePanel(tree,this);
+        //client.listener
+        //treePinter.update(repaintTree);
         container.add(sidePanel);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

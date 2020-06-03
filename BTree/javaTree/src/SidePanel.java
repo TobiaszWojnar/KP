@@ -1,30 +1,62 @@
 import javax.swing.*;
+import java.awt.*;
 
 class SidePanel extends JPanel {
-    String[] labelsName = {"Insert","Search", "Delete"};
-    JButton[] buttons = new JButton[labelsName.length];
-    JTextField[] textFields = new JTextField[labelsName.length];
+    private final String[] labelsName = {"Insert","Search", "Delete","Draw"};
+    private final JTextField[] textFields = new JTextField[labelsName.length-1];
+    private Listener listener;
 
-    public SidePanel(GenericBinaryTree tree, TreeGUI treeGUI){
-        for(int i=0; i < 3; i++ ){
+    public SidePanel(){
+
+        //TODO make adding buttons nicer
+        String[] typeList = {"Integer", "Double", "Char", "String"};
+        JComboBox<String> typeChooser = new JComboBox<>(typeList);
+        add(typeChooser);
+
+        JButton[] buttons = new JButton[labelsName.length];
+        for(int i = 0; i < labelsName.length-1; i++ ){
             textFields[i] = new JTextField();
             add(textFields[i]);
             buttons[i] = new JButton(labelsName[i]);
             add(buttons[i]);
         }
-        buttons[0].addActionListener(actionEvent -> {
-            tree.insert(Integer.parseInt(textFields[0].getText()));
-            treeGUI.repaint();
-            tree.draw();
+        buttons[3] = new JButton(labelsName[3]);
+        add(buttons[3]);
+
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));//TODO make nicer
+        setPreferredSize(new Dimension(getPreferredSize().width,getPreferredSize().height));
+
+        //TODO change listeners to set actions later?
+        typeChooser.addActionListener(actionEvent ->{
+            listener.typeChosen((String) typeChooser.getSelectedItem());
+        });
+        buttons[0].addActionListener(e -> {
+            listener.elementToInsertChosen(textFields[0].getText());
+            textFields[0].setText("");
+            textFields[0].requestFocus();
         });
         buttons[1].addActionListener(actionEvent -> {
-            tree.search(Integer.parseInt(textFields[1].getText()));//TODO popup?
-            tree.draw();
+            listener.elementToSearchChosen(textFields[1].getText());
+            textFields[1].setText("");
+            textFields[1].requestFocus();
         });
         buttons[2].addActionListener(actionEvent -> {
-            tree.delete(Integer.parseInt(textFields[2].getText()));
-            tree.draw();
+            listener.elementToDeleteChosen(textFields[2].getText());
+            textFields[2].setText("");
+            textFields[2].requestFocus();
         });
-        setLayout(new BoxLayout(this,1));
+        buttons[3].addActionListener(actionEvent -> {
+            listener.drawChosen();
+        });
+    }
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+    public interface Listener {
+        void typeChosen (String type);
+        void elementToInsertChosen(String element);
+        void elementToDeleteChosen(String element);
+        void elementToSearchChosen(String element);
+        void drawChosen();
     }
 }
