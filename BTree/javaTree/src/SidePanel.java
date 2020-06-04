@@ -9,7 +9,7 @@ class SidePanel extends JPanel {
     public SidePanel(){
 
         //TODO make adding buttons nicer
-        String[] typeList = {"Integer", "Double", "Char", "String"};
+        String[] typeList = {"Integer", "Double", "String"};//TODO zeby zaciagal typy z mozliwych z serwera
         JComboBox<String> typeChooser = new JComboBox<>(typeList);
         add(typeChooser);
 

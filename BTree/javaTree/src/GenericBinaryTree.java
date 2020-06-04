@@ -19,11 +19,12 @@ public class GenericBinaryTree <T extends Comparable<T>>{
     public GenericNode<T> search(T key){
         return root.search(key);
     }
-    public void draw() {
+    public String draw() {
+        String result="";
         if(root!=null) {
-            root.draw();
-            System.out.println(" ");
+            result.concat(root.draw(result));
         }
+        return result;
     }
 
 

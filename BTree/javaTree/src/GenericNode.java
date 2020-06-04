@@ -57,11 +57,12 @@ public class GenericNode <T extends Comparable<T>> {
         return minv;
     }
 
-    public void draw() {
+    public String draw(String result) {
         if (left != null)
-            left.draw();
-        System.out.print(key + " ");
+            left.draw(result);
+        result.concat(key + " ");
         if (right != null)
-            right.draw();
+            right.draw(result);
+        return result;
     }
 }

@@ -13,7 +13,7 @@ public class TreeGUI extends JFrame {
         this.tree=ntree;
         JPanel container = new JPanel();
         add(container);
-//ma mieć clienta
+
         treePainter = new TreePainter(tree.root);
         container.add(treePainter);
 
@@ -21,22 +21,22 @@ public class TreeGUI extends JFrame {
         sidePanel.setListener(new SidePanel.Listener() {
             @Override
             public void typeChosen(String type) {
-                tree.draw();//TODO jeśli brak zmian to serwer nic nie wysyła
-            }//TODO if changes delete tree and make new
+                tree.draw();
+            }
             @Override
             public void elementToInsertChosen(String element) {
-                tree.insert(element);//TODO where to cast //cast on server
+                tree.insert(element);
                 tree.draw();
                 //client.insert(element);
             }
             @Override
             public void elementToDeleteChosen(String element) {
-                //tree.delete(tree.root,element);//TODO where to cast
+                //tree.delete(tree.root,element);
                 tree.draw();
             }
             @Override
             public void elementToSearchChosen(String element) {//TODO popup?//Paint different color
-                tree.search(element);//TODO where to cast
+                tree.search(element);
                 tree.draw();
             }
             @Override

@@ -1,5 +1,3 @@
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,7 +9,6 @@ public class MyClient {
     Socket socket = null;
     PrintWriter out = null;
     BufferedReader in = null;
-    private SidePanel.Listener listener;
 
     public MyClient(){
         try {
@@ -28,11 +25,8 @@ public class MyClient {
         }
     }
 
-
-
-
-    public String sendType(String type){
-        out.println(type);
+    public String sendType(String type){//TODO czy odbieranie nie powinno być w osobnym wątku
+        out.println("changeType "+type);//TODO jakies API??
         String input=null;
         try {
             // Odbieranie z serwera
@@ -43,15 +37,52 @@ public class MyClient {
         }
         return input;
     }
-
-    public void setListener(SidePanel.Listener listener) {
-        this.listener = listener;
+    public String insert(String value){
+        out.println("insert "+value);
+        String input=null;
+        try {
+            // Odbieranie z serwera
+            input=in.readLine();
+        }
+        catch (IOException e) {
+            System.out.println("Read failed"); System.exit(1);
+        }
+        return input;
     }
-    public interface Listener {
-        void typeChosen (String type);
-        void elementToInsertChosen(String element);
-        void elementToDeleteChosen(String element);
-        void elementToSearchChosen(String element);
-        void drawChosen();
+    public String delete(String value){
+        out.println("delete "+value);
+        String input=null;
+        try {
+            // Odbieranie z serwera
+            input=in.readLine();
+        }
+        catch (IOException e) {
+            System.out.println("Read failed"); System.exit(1);
+        }
+        return input;
+    }
+    public String search(String value){
+        out.println("search "+value);
+        String input=null;
+        try {
+            // Odbieranie z serwera
+            input=in.readLine();
+        }
+        catch (IOException e) {
+            System.out.println("Read failed"); System.exit(1);
+        }
+        return input;
+    }
+    public String draw(){
+        out.println("draw");
+        String input=null;
+        try {
+            // Odbieranie z serwera
+            input=in.readLine();
+        }
+        catch (IOException e) {
+            System.out.println("Read failed"); System.exit(1);
+        }
+        return input;
     }
 }
