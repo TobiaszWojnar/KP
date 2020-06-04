@@ -1,28 +1,27 @@
 import java.io.*;
 import java.net.*;
 
-class MyServer {
+class MyServer implements AutoCloseable{
     ServerSocket server = null;
     Socket client = null;
     BufferedReader in = null;
     PrintWriter out = null;
     String line = "";//TODO why not in constructor
     String[] command;
-    enum KeyType {Integer, Double, String}
-    KeyType keyType;
+    Class<?>[] keyTypes = new Class<?>[] {Integer.class, Double.class, String.class};
+    Class<?> keyType;
     GenericBinaryTree tree;
     MyServer() {
         try {
             server = new ServerSocket(4444);
             tree=new GenericBinaryTree<Integer>();
-            keyType=KeyType.Integer;
-        }
-        catch (IOException e) {
+            keyType=Integer.class;
+        } catch (IOException e) {
             System.out.println("Could not listen on port 4444"); System.exit(-1);
         }
     }
 
-    public void listenSocket() {//TODO why not in constructor
+    public void listenSocket() {
         try {
             client = server.accept();
         } catch (IOException e) {
@@ -41,42 +40,48 @@ class MyServer {
                 if(command.length!=1&&command.length!=2) {
                     System.out.println(line);
                 } else{
-                    if(command.length==1 &&command[0].equals("draw")) {//will it work?
-                        out.println(treeSerializable());
-                    } else if(command[0].equals("changeType")){             //TODO does it work?
+                    if(command.length==1){
+                        if(command[0].equals("draw")) {
+                            out.println(treeSerializable());
+                        }else if (command[0].equals("getTypes")){//TODO test
+                            String[] names = new String[keyTypes.length];
+                            for(int i=0;i<names.length;i++)
+                                names[i]=keyTypes[i].getSimpleName();
+                            out.println(String.join(" ", names));
+                        }
+                    } else if(command[0].equals("changeType")){
                         try{
-                            if(keyType==KeyType.valueOf(command[1])) {
+                            Class<?> tempClass=Class.forName("java.lang."+command[1]);
+                            if(keyType==tempClass) {
                                 System.out.println(line+"  works no update");
                             } else {
-                                keyType=KeyType.valueOf(command[1]);
-                                switch (keyType) {
-                                    case Integer:
-                                        //tree. destroy
-                                        tree = new GenericBinaryTree<Integer>();
-                                        break;
-                                    case Double:
-                                        //tree. destroy
-                                        tree = new GenericBinaryTree<Double>();
-                                        break;
-                                    case String:
-                                        //tree. destroy
-                                        tree = new GenericBinaryTree<String>();
-                                        break;
-                                }
+                                keyType=tempClass;
+                                tree = new GenericBinaryTree(keyType);//TODO tu moze sie jebac
                             }
                             out.println(treeSerializable());
                         }catch (Exception e){//TODO what kind of Exception
                             System.out.println("bad data type");
                         }
-                    } else if(command[0].equals("insert")){
-                        //tree.insert(command[0]);//TODO how to cast?
+                    } else if(command[0].equals("insert")){//TODO make tests
+                        try {
+                            tree.insert(myCast(command[1]));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         out.println(treeSerializable());
                     } else if(command[0].equals("delete")){
-                        //tree.delete(command[0]);//TODO how to cast?
+                        try {
+                            tree.delete(myCast(command[1]));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         out.println(treeSerializable());
                     } else if(command[0].equals("search")){
-                        //tree.search(command[0]);//TODO how to cast?
-                        out.println(treeSerializable());//TODO make  searches it                                out.println("tree");em selected
+                        try {
+                            out.println(tree.search(myCast(command[1])));//TODO think how to
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -85,20 +90,29 @@ class MyServer {
             }
         }
     }
-    protected void finalize() {//TODO what to do if not finalize
+    private Comparable<?> myCast (String keyToCast) throws Exception {
+            if (keyType == Integer.class) {
+                return Integer.parseInt(keyToCast);
+            } else if (keyType == String.class) {
+                return keyToCast;
+            }else
+                throw new Exception("sth make");//TODO  what type
+    }
+    public void close() {//not finalize because deprecated
         try {
             in.close();
             out.close();
             client.close();
             server.close();
         } catch (IOException e) {
-            System.out.println("Could not close."); System.exit(-1);
+            System.out.println("Could not close."); //System.exit(-1);
         }
     }
 
     public static void main(String[] args) {
-        SocketServer server = new SocketServer();
-        server.listenSocket();
+        try(MyServer server = new MyServer()){//because implements autoclosable //Chceck if clase if exit by exit
+            server.listenSocket();
+        }
     }
     public String treeSerializable (){
         String treeString="";

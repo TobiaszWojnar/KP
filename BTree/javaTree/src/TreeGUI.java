@@ -3,8 +3,8 @@ import java.awt.*;
 
 
 public class TreeGUI extends JFrame {
-    TreePainter treePainter;
-    GenericBinaryTree tree;
+    TreeContainer treeContainer;
+    GenericBinaryTree tree;//TODO get rid of tree
     MyClient client;
 
     public TreeGUI(GenericBinaryTree ntree) {
@@ -14,11 +14,14 @@ public class TreeGUI extends JFrame {
         JPanel container = new JPanel();
         add(container);
 
-        treePainter = new TreePainter(tree.root);
-        container.add(treePainter);
+        TreeCanvas treeCanvas = new TreeCanvas();
+        container.add(treeCanvas);
 
-        SidePanel sidePanel = new SidePanel();
-        sidePanel.setListener(new SidePanel.Listener() {
+        treeContainer = new TreeContainer(tree.root);
+        container.add(treeContainer);
+
+        SidePanel sidePanel = new SidePanel(client.getType());
+        sidePanel.setListener(new SidePanel.Listener() {//TODO implement TreeCanvas
             @Override
             public void typeChosen(String type) {
                 tree.draw();
@@ -28,6 +31,7 @@ public class TreeGUI extends JFrame {
                 tree.insert(element);
                 tree.draw();
                 //client.insert(element);
+                //treeCanvas.treeUpdate();
             }
             @Override
             public void elementToDeleteChosen(String element) {
@@ -43,8 +47,6 @@ public class TreeGUI extends JFrame {
             public void drawChosen() {tree.draw();}
         });
 
-        //client.listener
-        //treePinter.update(repaintTree);
         container.add(sidePanel);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

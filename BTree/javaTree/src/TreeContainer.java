@@ -2,9 +2,9 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 
-class TreePainter extends JPanel {
+class TreeContainer extends JPanel {
     JTree jTree;
-    public TreePainter(GenericNode root){
+    public TreeContainer(GenericNode root){
         if(root!=null){
             DefaultMutableTreeNode jRoot = new DefaultMutableTreeNode(root.key);
             addToTree(root, jRoot);

@@ -6,11 +6,8 @@ class SidePanel extends JPanel {
     private final JTextField[] textFields = new JTextField[labelsName.length-1];
     private Listener listener;
 
-    public SidePanel(){
-
-        //TODO make adding buttons nicer
-        String[] typeList = {"Integer", "Double", "String"};//TODO zeby zaciagal typy z mozliwych z serwera
-        JComboBox<String> typeChooser = new JComboBox<>(typeList);
+    public SidePanel(String[] keyTypes){
+        JComboBox<String> typeChooser = new JComboBox<>(keyTypes);
         add(typeChooser);
 
         JButton[] buttons = new JButton[labelsName.length];
@@ -26,10 +23,9 @@ class SidePanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));//TODO make nicer
         setPreferredSize(new Dimension(getPreferredSize().width,getPreferredSize().height));
 
-        //TODO change listeners to set actions later?
-        typeChooser.addActionListener(actionEvent ->{
-            listener.typeChosen((String) typeChooser.getSelectedItem());
-        });
+        typeChooser.addActionListener(actionEvent ->
+            listener.typeChosen((String) typeChooser.getSelectedItem())
+        );
         buttons[0].addActionListener(e -> {
             listener.elementToInsertChosen(textFields[0].getText());
             textFields[0].setText("");

@@ -1,9 +1,11 @@
 public class GenericBinaryTree <T extends Comparable<T>>{
     GenericNode<T> root;
+    GenericBinaryTree (Class<T> treeType) {
+        root = null;
+    }
     GenericBinaryTree () {
         root = null;
     }
-
     public void insert(T key) {
         if(root==null)
             root=new GenericNode<>(key);
