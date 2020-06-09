@@ -1,4 +1,4 @@
-public class GenericNode <T extends Comparable<T>> {
+public class GenericNode <T extends Comparable<T>> {//TODO documentation
     public T key;
     public GenericNode<T> left, right;
 
@@ -32,9 +32,9 @@ public class GenericNode <T extends Comparable<T>> {
             return right.search(value);
         return null;
     }
-    public GenericNode<T> delete(T value) {//TODO empty things
+    public GenericNode<T> delete(T value) {
         if (value.compareTo(key) < 0 && left!=null)
-            left = left.delete(value);//TODO does it work when no left?
+            left = left.delete(value);
         else if (value.compareTo(key) > 0 && right!=null) {
             right = right.delete(value);
         } else { //value == key
@@ -57,12 +57,17 @@ public class GenericNode <T extends Comparable<T>> {
         return minv;
     }
 
-    public String draw(String result) {
-        if (left != null)
-            left.draw(result);
-        result.concat(key + " ");
-        if (right != null)
-            right.draw(result);
-        return result;
+    public void draw (){
+        if (left != null) {
+            System.out.print("↲ ");
+            left.draw();
+            System.out.print("↗ ");
+        }
+        System.out.print(key+" ");
+        if (right != null) {
+            System.out.print("↳ ");
+            right.draw();
+            System.out.print("↖ ");
+        }
     }
 }

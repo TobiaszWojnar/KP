@@ -1,4 +1,4 @@
-public class GenericBinaryTree <T extends Comparable<T>>{
+public class GenericBinaryTree <T extends Comparable<T>>{//TODO documentation
     GenericNode<T> root;
     GenericBinaryTree (Class<T> treeType) {
         root = null;
@@ -9,7 +9,8 @@ public class GenericBinaryTree <T extends Comparable<T>>{
     public void insert(T key) {
         if(root==null)
             root=new GenericNode<>(key);
-        root.insert(key);
+        else
+            root.insert(key);
     }
 
     public void delete(T key) {
@@ -21,13 +22,11 @@ public class GenericBinaryTree <T extends Comparable<T>>{
     public GenericNode<T> search(T key){
         return root.search(key);
     }
-    public String draw() {
-        String result="";
-        if(root!=null) {
-            result.concat(root.draw(result));
-        }
-        return result;
-    }
 
+    public void draw(){
+        if(root!=null) {
+            root.draw();
+        }
+    }
 
 }

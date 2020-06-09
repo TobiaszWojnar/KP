@@ -12,7 +12,7 @@ public class MyClient {
 
     public MyClient(){
         try {
-            socket = new Socket("localhost", 4444);
+            socket = new Socket("localhost", 4443);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (UnknownHostException e) {
@@ -33,6 +33,7 @@ public class MyClient {
         return input;
     }
     public String insert(String value){
+        System.out.println("client do server: "+"insert "+value);
         out.println("insert "+value);
         String input=null;
         try {
@@ -40,6 +41,7 @@ public class MyClient {
         } catch (IOException e) {
             System.out.println("Read failed"); System.exit(1);
         }
+        System.out.println("client od server: "+input);
         return input;
     }
     public String delete(String value){
@@ -73,10 +75,12 @@ public class MyClient {
         return input;
     }
     public String[] getType(){
-        out.println("getKeyType");
+        out.println("getKeyTypes");
         String input=null;
         try {
+            System.out.println("g");
             input=in.readLine();
+            System.out.println("h");
         } catch (IOException e) {
             System.out.println("Read failed"); System.exit(1);
         }

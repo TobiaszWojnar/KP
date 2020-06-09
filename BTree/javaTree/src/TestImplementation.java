@@ -1,18 +1,17 @@
-import javax.swing.*;
-
-public class Main {
-
-    public static void main(String[] args) {//TODO make separate main for server
-        //TODO only server know type it returns string
-        //TODO make serializator na serwerze
+public class TestImplementation {//TODO documentation
+    public static void main(String[] args) {
         testInt();
-        //testDouble();
-        //testString();
+        testDouble();
+        testString();
     }
     public static void testInt(){
         GenericBinaryTree<Integer> treeInt = new GenericBinaryTree<>();
         treeInt.insert(50);
+        System.out.println("Delete 50");
+        treeInt.delete(50);
+        treeInt.draw();
         treeInt.insert(30);
+        treeInt.draw();
         treeInt.insert(20);
         treeInt.insert(40);
         treeInt.insert(70);
@@ -21,13 +20,25 @@ public class Main {
 
         System.out.println("Inorder traversal of the given tree");
         treeInt.draw();
-        System.out.println("\nDelete 80");
+        System.out.println("Search 80");
+        System.out.println(treeInt.search(80));
+        System.out.println("Delete 80");
         treeInt.delete(80);
-        System.out.println("Inorder traversal of the modified tree");
+        System.out.println("Search 80");
+        System.out.println(treeInt.search(80));
         treeInt.draw();
-        treeInt.delete(30);//TODO does not delete root
+        System.out.println("Delete 30");
+        treeInt.delete(30);
         treeInt.draw();
-        SwingUtilities.invokeLater(() -> new TreeGUI(treeInt));
+        System.out.println("Delete 50");
+        treeInt.delete(50);
+        treeInt.draw();
+        System.out.println("Delete 60,70,20,40");
+        treeInt.delete(60);
+        treeInt.delete(70);
+        treeInt.delete(20);
+        treeInt.delete(40);
+        treeInt.draw();
     }
     public static void testDouble(){
         GenericBinaryTree<Double> treeDouble = new GenericBinaryTree<>();
@@ -46,11 +57,8 @@ public class Main {
         System.out.println("Inorder traversal of the modified tree");
         treeDouble.draw();
         System.out.println(treeDouble.search(30.0).right.key);
-
-        //SwingUtilities.invokeLater(() -> new TreeGUI(treeDouble));
     }
-    public static void testString(){
-        //BinarySearchTree tree2 = new BinarySearchTree();
+    public static void testString() {
         GenericBinaryTree<String> tree2 = new GenericBinaryTree<>();
         tree2.insert("50.0");
         tree2.insert("30.0");
@@ -67,17 +75,15 @@ public class Main {
         System.out.println("Inorder traversal of the modified tree");
         tree2.draw();
         System.out.println(tree2.search("30.0").right.key);
-        /*
+
         System.out.println("\nDelete 30");
-        tree.delete(30);
+        tree2.delete("30");
         System.out.println("Inorder traversal of the modified tree");
-        tree.draw();
+        tree2.draw();
 
         System.out.println("\nDelete 50");
-        tree.delete(50);
+        tree2.delete("50");
         System.out.println("Inorder traversal of the modified tree");
-        tree.draw();
-        */
-        //SwingUtilities.invokeLater(() -> new TreeGUI(tree2));
+        tree2.draw();
     }
 }

@@ -1,57 +1,70 @@
 import javax.swing.*;
 import java.awt.*;
 
-
-public class TreeGUI extends JFrame {
-    TreeContainer treeContainer;
-    GenericBinaryTree tree;//TODO get rid of tree
+public class TreeGUI extends JFrame {//TODO documentation
     MyClient client;
+    TreeCanvas treeCanvas;
+    SidePanel menuPanel;
+    JScrollPane scrollPane;
 
-    public TreeGUI(GenericBinaryTree ntree) {
-        //client=new MyClient();
+    public TreeGUI() {
+        client=new MyClient();
 
-        this.tree=ntree;
-        JPanel container = new JPanel();
-        add(container);
+        menuPanel = new SidePanel(client.getType());
+        add(menuPanel,BorderLayout.LINE_START);
 
-        TreeCanvas treeCanvas = new TreeCanvas();
-        container.add(treeCanvas);
+        treeCanvas = new TreeCanvas();
+        scrollPane = new JScrollPane(treeCanvas,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+        add(scrollPane,BorderLayout.CENTER);
 
-        treeContainer = new TreeContainer(tree.root);
-        container.add(treeContainer);
+        setTitle("Tree visualization");
+        setMinimumSize(new Dimension(240,240));
+        setPreferredSize(new Dimension(640,320));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
 
-        SidePanel sidePanel = new SidePanel(client.getType());
-        sidePanel.setListener(new SidePanel.Listener() {//TODO implement TreeCanvas
+        menuPanel.setListener(new SidePanel.Listener() {
             @Override
             public void typeChosen(String type) {
-                tree.draw();
+                treeCanvas.treeUpdate(client.sendType(type));
+                setScroll(0);
+                System.out.println(scrollPane.getSize().height);
             }
             @Override
             public void elementToInsertChosen(String element) {
-                tree.insert(element);
-                tree.draw();
-                //client.insert(element);
-                //treeCanvas.treeUpdate();
+                treeCanvas.treeUpdate(client.insert(element));
+                setScroll(0.5);
             }
             @Override
             public void elementToDeleteChosen(String element) {
-                //tree.delete(tree.root,element);
-                tree.draw();
+                treeCanvas.treeUpdate(client.delete(element));
+                setScroll(0.5);
             }
             @Override
-            public void elementToSearchChosen(String element) {//TODO popup?//Paint different color
-                tree.search(element);
-                tree.draw();
+            public void elementToSearchChosen(String element) {//TODO Paint different color
+                String wasFound = "was found";
+                if("null".equals(client.search(element)))
+                    wasFound = "was not found";
+                JOptionPane.showMessageDialog(treeCanvas, "key= "+element+" "+wasFound, "Search result", JOptionPane.INFORMATION_MESSAGE);
+                setScroll(0.5);
             }
             @Override
-            public void drawChosen() {tree.draw();}
+            public void drawChosen() {
+                treeCanvas.treeUpdate(client.draw());
+                setScroll(0.5);
+            }
         });
-
-        container.add(sidePanel);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Tree visualization");
-        setMinimumSize(new Dimension(getPreferredSize().width,getPreferredSize().height+30));
-        setVisible(true);
+    }
+    private void setScroll(double percent){
+        JScrollBar scrollBar = scrollPane.getHorizontalScrollBar();
+        int min = scrollBar.getMaximum();
+        int max = scrollBar.getMaximum();
+        if(0<=percent&&percent<=1)
+            scrollBar.setValue((int)(min+(max-min)*percent));
+    }
+    public static void main(String[] args) {
+        TreeGUI app = new TreeGUI();
+        app.setVisible(true);
     }
 }
