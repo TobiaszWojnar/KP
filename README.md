@@ -2,62 +2,80 @@
 Object-oriented programming course at Wroclaw University of Science and Technology
 2020
 
-### List 1 - create class PrimeNumbers creating table of prime numbers smaller than n
-#### Requirements
-* implemented in Java nad C++
-#### What I Learned
+Setup and detailed requirements for each list are in their folder.
+
+Below are brief notes on each exercise.
+
+#### List 0 - first programs in java
+##### Requirements
+* Compile example code
+* Write code printing starting arguments in separate lines
+* Write a code that for natural number will print its greatest divisor
+##### What I Learned
+* Compiling java code
+* Using command line arguments
+* Parsing arguments
+
+#### List 1 - PrimeNumbers table smaller than n
+##### Requirements
+  Implemented in Java nad C++ class PrimeNumbers creating table of prime numbers smaller than n
+##### What I Learned
 * implementing classes
+* making makefile
 
-### List 2 - Implement class translating between arabic and roman numbers
+### List 2 - Translate between arabic and roman numbers - Exceptions
 #### Requirements
-* handle exceptions and bad data
-* implemented in Java nad C++
+  Implement in Java nad C++ class translating between arabic and roman numbers.
+  Handle exceptions and bad data.
+  
 #### What I Learned
-* using exceptions
+* Using exceptions
 
-### List 3 - create class calculating surface area and circumference of geometric figures
+### List 3 - Calculate surface area and circumference - Extending classes
 #### Requirements
-* implemented in Java nad C++
-* implement abstract class and class hierarchy
-* handle exceptions and bad data
+  Create in Java nad C++ class calculating surface area and circumference of geometric figures.
+  Use abstract class and class hierarchy.
+
 #### What I Learned
 * implementing interfaces, abstract classes
-* basics of Javadoc
-* basics of testing
+* extending classes
+* basic documenting in Javadoc
+* basic tests
 
-### List 4 - create basic paint app
+### List 4 - Basic paint app - GUI
 #### Requirements
-* enable creating and modifying geometric figures
-* saving to file
-* add popup Info
-* generate documentation with javadoc and doxygen
-* don't use package
-* don't use javafx
+  Create basic paint app enabling creating and modifying figures, 
+  saving and opening files.
 #### What I Learned
 * making GUI
 * using Swing
 * very painfully difference between `=+` and `+=`
 * implementing interfaces and methods 
 * using Listeners
+* using VisitorPattern
+* why packages are important
 * generating doxygen documentation
 
-### List 5 -  using threads create simulation with flickering rectangles
+### List 5 -  Multithreaded discoSimulation
 #### Requirements
-* Simulate a board of `n` x `m` rectangles with random initial color.
-Each rectangle is thread that after time `t` changes it's color (t = random number of milliseconds in range [0.5k, 1.5k]).
-* rectangle changes its color:
-    * with probability `p` to random
-    * with probability `p-1` to average of its neighbours (treat board as 2d torus)
-* take care of synchronization to avoid conflicts
-* add ability to stop each thread by clicking on rectangle
-* add rescaling application
+Simulate using threads a board of color changing rectangles.
 #### What I Learned
 * using labels and textFields in swing
 * using threads
 * stopping and restarting threads
+* making better javadoc
+* first used a ternary operator `a ? b : c`
 
-### List 6
+### List 6 - BTree 
 #### Requirements
-* 
+Implement in Java and C++ Binary Search Tree on generic types, create GUI and implement client-server architecture.
+
 #### What I Learned
-* 
+* Declaring and using parameterized classes
+* Algorithms for inserting, searching, deleting elements on binary trees
+* Better understanding of listeners
+* Better understanding of Swing (JScrollPane, JScrollBar, JTree, JSplitPane)
+* Better understanding of javadoc
+* understanding doxygen
+* client-server architecture
+* Using sockets
