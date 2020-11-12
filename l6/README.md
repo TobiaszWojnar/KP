@@ -1,5 +1,5 @@
 # BTree
-##List 6 - Implement in Java and C++ Binary Search Tree on generic types, create GUI and implement client-server architecture.
+## List 6 - Implement in Java and C++ Binary Search Tree on generic types, create GUI and implement client-server architecture.
 
 ### Programing Course
 Object-oriented programming course at Wroclaw University of Science and Technology
